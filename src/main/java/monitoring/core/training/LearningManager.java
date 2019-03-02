@@ -1,12 +1,17 @@
-package ubl;
+package monitoring.core.training;
 
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import monitoring.core.filewriting.FileParser;
+import monitoring.core.som.SOM;
+import monitoring.core.som.WeightVector;
+import monitoring.core.utils.visulaizer.Visualizer;
 
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ *  Methods for training.
+ */
 public class LearningManager {
     //training data size
     int inputDataSize;
@@ -20,22 +25,15 @@ public class LearningManager {
     //weight vectors with which to train
     ArrayList<WeightVector> inputWeightVectors;
 
-    // K for K-cross fold validation
+    // kFactor for kFactor-cross fold validation
     //change 100 to 1000
-    final int K = 100;
+    final int kFactor = 100;
 
     // used for our integrated code with two separate logs for CPU and memory
-    public LearningManager(int inputDataSize, File cpu_log, File mem_log) {
+    public LearningManager(int inputDataSize, File cpuLog, File memLog) {
         this.inputDataSize = inputDataSize;
-        FileParser parser = new FileParser(cpu_log, mem_log);
+        FileParser parser = new FileParser(cpuLog, memLog);
         inputWeightVectors = parser.createWeightVectors(inputDataSize);
-    }
-
-    // used while training with Daniel's data set
-    public LearningManager(int inputDataSize, File trainFile) {
-        this.inputDataSize = inputDataSize;
-        FileParser parser = new FileParser(trainFile, null);
-        inputWeightVectors = parser.createWeightVectorsFromTestFile(inputDataSize, trainFile);
     }
 
     // function used for training
@@ -62,19 +60,6 @@ public class LearningManager {
         }
 
 
-        //System.out.println("Selected SOM");
-
-        //JSON
-//        for(int i=0;i<mapLength;i++){
-//            for (int j=0;j<mapBreadth;j++) {
-//                JSONObject jsonObject = new JSONObject();
-//                jsonObject.put("co-ordinates","("+i+","+j+")");
-//                jsonObject.put()
-//            }
-//
-//        }
-
-
         //Write the elements to the file
         try (PrintWriter writer = new PrintWriter(new File("/home/thamy/Desktop/Self-Adaptive-Monitoring-System/HistoryData/test.csv"))) {
             for (int i = 0; i < mapLength; i++) {
@@ -98,18 +83,20 @@ public class LearningManager {
         visualizer.draw();
 
 
-        //  System.out.println("SELF ORGANIZING MAP " + som.neurons);
+          System.out.println("SELF ORGANIZING MAP " + som.getAccuracy());
         System.out.println("SOM is successfully trained ");
         return som;
     }
 
-    // method to perform K fold cross validation
+    // method to perform kFactor fold cross validation
     private SOM kFoldCrossValidation(WeightVector[][] inputSets) {
         SOM[] soms = trainWithOtherSets(inputSets);
-        for (int i = 0; i < K; i++)
+        for (int i = 0; i < kFactor; i++) {
             soms[i].classifyNeurons();
-        for (int i = 0; i < K; i++)
+        }
+        for (int i = 0; i < kFactor; i++) {
             soms[i].calculateAccuracy(inputSets[i]);
+        }
         return getTheBestAccuracy(soms);
     }
 
@@ -118,48 +105,48 @@ public class LearningManager {
         double accuracy = 0;
         SOM bestAccuracySOM = null;
         for (int i = 0; i < trainedSoms.length; i++) {
-            System.out.println("Som " + i + " accuracy: " + trainedSoms[i].getAccuracy());
+            System.out.println("Som " + i + " accuracy: " + trainedSoms[i].getAccuracy() * 100);
             if (trainedSoms[i].getAccuracy() > accuracy) {
                 accuracy = trainedSoms[i].getAccuracy();
                 bestAccuracySOM = trainedSoms[i];
             }
+
         }
         return bestAccuracySOM;
     }
 
-    // trains for K fold cross validation
+    // trains for kFactor fold cross validation
     private SOM[] trainWithOtherSets(WeightVector[][] inputSets) {
-        SOM[] soms = new SOM[K];
-        for (int i = 0; i < K; i++)
-            //creating K Self Organizing maps
+        SOM[] soms = new SOM[kFactor];
+        for (int i = 0; i < kFactor; i++) {
+            //creating kFactor Self Organizing maps
             soms[i] = new SOM();
+        }
         int currentK = 0;
 
-        while (currentK < K) {
-            for (int i = 0; i < K; i++) {
+        while (currentK < kFactor) {
+            for (int i = 0; i < kFactor; i++) {
                 if (i != currentK) {
                     for (int k = 0; k < inputSets[i].length; k++) {
                         soms[currentK].trainWithInput(inputSets[i][k]);
                     }
                 }
-               // Visualizer visualizer = new Visualizer(soms[currentK]);
-               // visualizer.draw();
+
             }
-            // Visualizer visualizer = new Visualizer(soms[currentK]);
-            // visualizer.draw();
+
             currentK++;
         }
 
         return soms;
     }
 
-    // divides training data into K sets
+    // divides training data into kFactor sets
     private WeightVector[][] createInputSets() {
-        int setSize = inputDataSize / K;
-        WeightVector inputSet[][] = new WeightVector[K][setSize];
+        int setSize = inputDataSize / kFactor;
+        WeightVector inputSet[][] = new WeightVector[kFactor][setSize];
         int i = 0;
         int m = 0;
-        for (i = 0; i < K; i++) {
+        for (i = 0; i < kFactor; i++) {
             for (int j = 0; j < setSize; j++) {
                 inputSet[i][j] = inputWeightVectors.get(m);
                 m++;

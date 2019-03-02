@@ -1,9 +1,13 @@
-package ubl;
+package monitoring.core.utils.visulaizer;
+
+import monitoring.core.som.SOM;
 
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ *  This class contains the implementation to visualize self organizing map.
+ */
 public class Visualizer extends JFrame {
     private static final long SERIALVERSIONUID = 0L;
 

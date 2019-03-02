@@ -1,10 +1,14 @@
-package ubl;
+package monitoring.core.som;
 
 import java.io.Serializable;
 
-enum State {NORMAL, ANOMALOUS}
+enum State { NORMAL, ANOMALOUS}
 
+/**
+ * This class contains the implementation to create neurons for SOM.
+ */
 public class Neuron implements Serializable {
+
     private WeightVector weightVector = new WeightVector();
 
     // state of the neuron: Normal, Anomalous
@@ -36,11 +40,17 @@ public class Neuron implements Serializable {
         this.weightVector = weightVector;
     }
 
-    public State getState() { return state; }
+    public State getState() {
+        return state;
+    }
 
-    public double getNeighbourhoodAreaSize() { return neighbourhoodAreaSize;}
+    public double getNeighbourhoodAreaSize() {
+        return neighbourhoodAreaSize;
+    }
 
-    public void setState(State state) { this.state = state; }
+    public void setState(State state) {
+        this.state = state;
+    }
 
     public Neuron(int x, int y) {
         this.x = x;

@@ -1,20 +1,23 @@
-package ubl;
-
+package monitoring.core.som;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class contains the implementation for the scheleton for Self Organizing Map.
+ */
+
 public class SOM implements Serializable {
     // SOM map mapLength
-    int length = 32;
+    public int length = 32;
 
     // SOM map mapBreadth
-    int breadth = 32;
+    public int breadth = 32;
 
     // neuron sets in SOM
-    Neuron[][] neurons = new Neuron[length][breadth];
+    public Neuron[][] neurons = new Neuron[length][breadth];
 
     private double accuracy;
 
@@ -25,7 +28,7 @@ public class SOM implements Serializable {
     private static final double INFINITE = Double.MAX_VALUE;
 
     // number of times each input should be trained default 10
-    private static final int TIMES_TO_TRAIN_WITH_INPUT = 5;
+    private static final int TIMES_TO_TRAIN_WITH_INPUT = 3;
 
     // threshold percentile default 80
     private static final int PERCENTILE = 85;
@@ -36,11 +39,12 @@ public class SOM implements Serializable {
 
     // initialize neurons with random values from 0 to 100
     private void initialize() {
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++) {
             for (int j = 0; j < breadth; j++) {
                 neurons[i][j] = new Neuron(i, j);
                 (neurons[i][j]).initialize();
             }
+        }
     }
 
     // function for training with given input vector
@@ -56,7 +60,7 @@ public class SOM implements Serializable {
         Neuron trainedNeuron = null;
         double minDistance = INFINITE;
 
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++) {
             for (int j = 0; j < breadth; j++) {
                 double distance = neurons[i][j].getEuclideanDistance(input);
                 if (minDistance > distance) {
@@ -64,6 +68,7 @@ public class SOM implements Serializable {
                     trainedNeuron = neurons[i][j];
                 }
             }
+        }
         return trainedNeuron;
     }
 
@@ -72,13 +77,14 @@ public class SOM implements Serializable {
         int i = 0;
         int j = 0;
         int x = trained.getX();
-        if (x > 0 && x < length)
+        if (x > 0 && x < length) {
             i = x - 1;
+        }
         int y = trained.getY();
         while (i < length && i <= x + 1) {
-            if (y > 0 && y < length)
+            if (y > 0 && y < length) {
                 j = y - 1;
-
+            }
             while (j < breadth && j <= y + 1) {
                 updateWeight(neurons[i][j], input);
                 j++;
@@ -111,21 +117,25 @@ public class SOM implements Serializable {
     // function for classifying neurons as Normal or Anomalous
     // based on Neighborhood Area Size
     private void classify(double threshold) {
-        for (int i = 0; i < length; i++)
-            for (int j = 0; j < breadth; j++)
-                if (neurons[i][j].neighbourhoodAreaSize > threshold)
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < breadth; j++) {
+                if (neurons[i][j].neighbourhoodAreaSize > threshold) {
                     neurons[i][j].setState(State.ANOMALOUS);
-                else {
+                } else {
                     neurons[i][j].setState(State.NORMAL);
                 }
+            }
+        }
     }
 
     // function for finding threshold value based on percentile
     private double findThresholdValue() {
         List<Double> nas = new ArrayList<Double>();
-        for (int i = 0; i < length; i++)
-            for (int j = 0; j < breadth; j++)
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < breadth; j++) {
                 nas.add(neurons[i][j].neighbourhoodAreaSize);
+            }
+        }
         Collections.sort(nas);
         int i = nas.size() * PERCENTILE / 100;
         return nas.get(i);
@@ -133,25 +143,31 @@ public class SOM implements Serializable {
 
     // function to calculate Neighborhood Area Size with neighbours
     private void calculateNeighbourhoodAreaFunction() {
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++) {
             for (int j = 0; j < breadth; j++) {
-                if (i > 0)
+                if (i > 0) {
                     (neurons[i][j]).calculateManhattanDistance(neurons[i - 1][j]);
-                if (j < breadth - 1)
+                }
+                if (j < breadth - 1) {
                     (neurons[i][j]).calculateManhattanDistance(neurons[i][j + 1]);
-                if (i < length - 1)
+                }
+                if (i < length - 1) {
                     (neurons[i][j]).calculateManhattanDistance(neurons[i + 1][j]);
-                if (j > 0)
+                }
+                if (j > 0) {
                     (neurons[i][j]).calculateManhattanDistance(neurons[i][j - 1]);
+                }
             }
+        }
     }
 
     // function to display neurons
     public void printNeurons() {
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++) {
             for (int j = 0; j < breadth; j++) {
                 neurons[i][j].printVector();
             }
+        }
     }
 
     public void printSOM() {
@@ -173,8 +189,9 @@ public class SOM implements Serializable {
         //  System.out.println(inputSet.mapLength);
         for (int i = 0; i < inputSet.length; i++) {
             Neuron trainedNeuron = getTrainedNeuron(inputSet[i]);
-            if (trainedNeuron.getState() == State.NORMAL)
+            if (trainedNeuron.getState() == State.NORMAL) {
                 normalCount++;
+            }
         }
         accuracy = normalCount / (double) (inputSet.length);
     }
@@ -197,22 +214,26 @@ public class SOM implements Serializable {
         int x = trainedNeuron.getX();
         int y = trainedNeuron.getY();
         int m, n, o, p;
-        if (x == 0)
+        if (x == 0) {
             m = 0;
-        else
+        } else {
             m = x - 1;
-        if (x == length - 1)
+        }
+        if (x == length - 1) {
             n = length - 1;
-        else
+        } else {
             n = x + 1;
-        if (y == 0)
+        }
+        if (y == 0) {
             o = 0;
-        else
+        } else {
             o = y - 1;
-        if (y == breadth - 1)
+        }
+        if (y == breadth - 1) {
             p = breadth - 1;
-        else
+        } else {
             p = y + 1;
+        }
         List<Integer> majorityVoting = new ArrayList<Integer>();
         for (int i = m; i < n; i++) {
             for (int j = o; j < p; j++) {
@@ -224,13 +245,15 @@ public class SOM implements Serializable {
         }
         int[] count = new int[3];
         for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < majorityVoting.size(); j++)
-                if (majorityVoting.get(j) == i)
+            for (int j = 0; j < majorityVoting.size(); j++) {
+                if (majorityVoting.get(j) == i) {
                     count[i]++;
+                }
+            }
         }
-        if (count[0] >= count[1]){
+        if (count[0] >= count[1]) {
             return 1;
-        }else{
+        } else {
             return 2;
         }
 
@@ -240,8 +263,10 @@ public class SOM implements Serializable {
 
     // function to print neighborhood area sizes of all neurons
     public void printNAS() {
-        for (int i = 0; i < length; i++)
-            for (int j = 0; j < breadth; j++)
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < breadth; j++) {
                 System.out.println(Math.round(neurons[i][j].neighbourhoodAreaSize));
+            }
+        }
     }
 }

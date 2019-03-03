@@ -22,8 +22,7 @@ public class ReadInput {
                 return parseMem();
             }
 
-        }
-        catch(Exception e)
+        } catch (Exception e)
         {
             System.out.println(e);
         }

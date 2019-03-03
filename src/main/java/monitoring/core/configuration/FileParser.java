@@ -1,4 +1,4 @@
-package monitoring.core.filewriting;
+package monitoring.core.configuration;
 
 import monitoring.core.som.WeightVector;
 

@@ -1,7 +1,7 @@
 package monitoring.core.training;
 
 
-import monitoring.core.filewriting.FileParser;
+import monitoring.core.configuration.FileParser;
 import monitoring.core.som.SOM;
 import monitoring.core.som.WeightVector;
 import monitoring.core.utils.visulaizer.Visualizer;
@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- *  Methods for training.
+ *  Methods used for training.
  */
 public class LearningManager {
     //training data size

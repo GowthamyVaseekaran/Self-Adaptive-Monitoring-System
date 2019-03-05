@@ -2,8 +2,10 @@ package monitoring.core.utils.visulaizer;
 
 import monitoring.core.som.SOM;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  *  This class contains the implementation to visualize self organizing map.

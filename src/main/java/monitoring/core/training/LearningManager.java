@@ -1,18 +1,26 @@
 package monitoring.core.training;
 
-
 import monitoring.core.configuration.FileParser;
 import monitoring.core.som.SOM;
 import monitoring.core.som.WeightVector;
 import monitoring.core.utils.visulaizer.Visualizer;
 
-import java.io.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
  *  Methods used for training.
  */
 public class LearningManager {
+    private static final Log logger = LogFactory.getLog(LearningManager.class);
     //training data size
     int inputDataSize;
 
@@ -45,7 +53,7 @@ public class LearningManager {
 
         //saved model
         //serialize the object
-        String fileName = "/home/thamy/Desktop/Self-Adaptive-Monitoring-System/HistoryData/test.ser";
+        String fileName = "/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/test.ser";
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(fileName);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -54,17 +62,17 @@ public class LearningManager {
             objectOutputStream.writeObject(som);
             objectOutputStream.close();
             fileOutputStream.close();
-            System.out.println("serialization done");
+            logger.info("serialization done");
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
 
 
         //Write the elements to the file
-        try (PrintWriter writer = new PrintWriter(new File("/home/thamy/Desktop/Self-Adaptive-Monitoring-System/HistoryData/test.csv"))) {
+        try (PrintWriter writer = new PrintWriter(
+                new File("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/test.csv"))) {
             for (int i = 0; i < mapLength; i++) {
                 for (int j = 0; j < mapBreadth; j++) {
-                    //System.out.println("test" + som.neurons.mapLength);
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append("(" + i + " " + j + ")");
                     stringBuilder.append(",");
@@ -78,13 +86,13 @@ public class LearningManager {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
         visualizer.draw();
 
 
-          System.out.println("SELF ORGANIZING MAP " + som.getAccuracy());
-        System.out.println("SOM is successfully trained ");
+        logger.info("SELF ORGANIZING MAP " + som.getAccuracy());
+        logger.info("SOM is successfully trained ");
         return som;
     }
 
@@ -105,7 +113,7 @@ public class LearningManager {
         double accuracy = 0;
         SOM bestAccuracySOM = null;
         for (int i = 0; i < trainedSoms.length; i++) {
-            System.out.println("Som " + i + " accuracy: " + trainedSoms[i].getAccuracy() * 100);
+            logger.info("Som " + i + " accuracy: " + trainedSoms[i].getAccuracy() * 100);
             if (trainedSoms[i].getAccuracy() > accuracy) {
                 accuracy = trainedSoms[i].getAccuracy();
                 bestAccuracySOM = trainedSoms[i];

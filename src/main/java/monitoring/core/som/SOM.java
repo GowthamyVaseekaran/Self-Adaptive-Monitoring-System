@@ -1,5 +1,9 @@
 package monitoring.core.som;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,8 +12,11 @@ import java.util.List;
 /**
  * This class contains the implementation for the scheleton for Self Organizing Map.
  */
-
+@Component
 public class SOM implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    private static final Log logger = LogFactory.getLog(SOM.class);
     // SOM map mapLength
     public int length = 32;
 
@@ -179,14 +186,13 @@ public class SOM implements Serializable {
             }
         }
 
-        System.out.println(stringBuilder.toString());
+        logger.info(stringBuilder.toString());
 
     }
 
     // function to calculate accuracy of current SOM
     public void calculateAccuracy(WeightVector[] inputSet) {
         int normalCount = 0;
-        //  System.out.println(inputSet.mapLength);
         for (int i = 0; i < inputSet.length; i++) {
             Neuron trainedNeuron = getTrainedNeuron(inputSet[i]);
             if (trainedNeuron.getState() == State.NORMAL) {
@@ -200,10 +206,10 @@ public class SOM implements Serializable {
     public int testInput(WeightVector input) {
         Neuron trainedNeuron = getTrainedNeuron(input);
         if (trainedNeuron.getState() == State.ANOMALOUS) {
-            System.out.println("Am anomaly");
+            logger.info("Am anomaly");
             return causeInference(trainedNeuron);
         } else {
-            System.out.println("am normal");
+            logger.info("am normal");
             return 0;
         }
 
@@ -265,7 +271,7 @@ public class SOM implements Serializable {
     public void printNAS() {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < breadth; j++) {
-                System.out.println(Math.round(neurons[i][j].neighbourhoodAreaSize));
+                logger.info(Math.round(neurons[i][j].neighbourhoodAreaSize));
             }
         }
     }

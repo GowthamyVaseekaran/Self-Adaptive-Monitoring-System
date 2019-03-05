@@ -1,12 +1,18 @@
 package monitoring.core.som;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 import java.util.Random;
 
 /**
  *  This class contain the implementation to create and update weights of SOM.
  */
+@Component
 public class WeightVector implements Serializable {
+    private static final Log logger = LogFactory.getLog(WeightVector.class);
 
     // number of metrics being collected
     private int size = 2;
@@ -35,9 +41,9 @@ public class WeightVector implements Serializable {
     // function to print vector
     public void print() {
         for (int i = 0; i < size; i++) {
-            System.out.print(vector[i]);
+            logger.info(vector[i]);
         }
-        System.out.println();
+        logger.info("\n");
     }
 
     // function to calculate Euclidean distance with given input vector

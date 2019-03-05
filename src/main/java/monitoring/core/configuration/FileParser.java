@@ -1,6 +1,8 @@
 package monitoring.core.configuration;
 
 import monitoring.core.som.WeightVector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,8 +14,9 @@ import java.util.Scanner;
  * values are : cpu file, mem file and input datasize.
  */
 public class FileParser {
-    Scanner cpuScanner;
-    Scanner memScanner;
+    private Scanner cpuScanner;
+    private Scanner memScanner;
+    private static final Log logger = LogFactory.getLog(FileParser.class);
 
     public FileParser(File cpuLog, File memLog) {
         try {
@@ -22,7 +25,7 @@ public class FileParser {
                 this.memScanner = new Scanner(memLog, "UTF-8");
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
     }

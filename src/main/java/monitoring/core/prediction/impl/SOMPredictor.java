@@ -6,6 +6,7 @@ import monitoring.core.bean.HealthDeterminer;
 import monitoring.core.bean.SystemStatus;
 import monitoring.core.metrics.HeapDumper;
 import monitoring.core.metrics.Metrics;
+import monitoring.core.prediction.impl.utils.Constants;
 import monitoring.core.som.Neuron;
 import monitoring.core.som.SOM;
 import monitoring.core.som.WeightVector;
@@ -57,7 +58,6 @@ public class SOMPredictor implements MonitoringAsService {
 
         trainedSOM = deSerialization("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/test.ser");
 
-
         Metrics metricsAgent = new Metrics("17014");
 
         double[] metrics = new double[2];
@@ -88,29 +88,29 @@ public class SOMPredictor implements MonitoringAsService {
 
         if (current == 1 && last == 1 && secondLast == 1) {
             logger.info("Tring Tring Anomaly detected");
-            systemStatus.setSystemStatus("CPU Anomaly");
+            systemStatus.setSystemStatus(Constants.CPU_ANOMALY_TEXT);
             Neuron trainedNeuron = trainedSOM.getTrainedNeuron(testVector);
             int prediction = trainedSOM.causeInference(trainedNeuron);
 
             // if cause inference gives CPU as metric causing anomaly
             if (prediction == 1) {
                 cpu++;
-                systemStatus.setSystemStatus("CPU Anomaly");
+                systemStatus.setSystemStatus(Constants.CPU_ANOMALY_TEXT);
                 logger.info("CPU " + cpu + " Anomaly detected cpu = " + metrics[0]);
             } else if (prediction == 2) {
                 // if cause inference gives Memory as metric causing anomaly
                 mem++;
-                systemStatus.setSystemStatus("Memory Anomaly");
+                systemStatus.setSystemStatus(Constants.MEMORY_ANOMALY_TEXT);
                 logger.info("Mem " + mem + " Anomaly detected" + "   mem  " + metrics[1]);
             }
 
         } else if (current == 2 && last == 2 && secondLast == 2) {
             mem++;
-            systemStatus.setSystemStatus("Memory Anomaly");
+            systemStatus.setSystemStatus(Constants.MEMORY_ANOMALY_TEXT);
             logger.info("Mem " + mem + " Anomaly detected" + "   mem  " + metrics[1]);
         } else {
             normal++;
-            systemStatus.setSystemStatus("Normal");
+            systemStatus.setSystemStatus(Constants.NORMAL_STATE_TEXT);
             //Assigning mem and cpu anomaly count to zero, if we identify normal behaviour again after anomaly.
             // so when we identify again the anomaly the count will start from 0.
             mem = 0;
@@ -147,6 +147,4 @@ public class SOMPredictor implements MonitoringAsService {
         Date d1 = new Date();
         return String.valueOf(d1);
     }
-
-
 }

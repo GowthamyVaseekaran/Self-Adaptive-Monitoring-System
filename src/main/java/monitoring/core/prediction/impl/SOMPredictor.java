@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import monitoring.core.bean.HealthDeterminer;
 import monitoring.core.bean.SystemStatus;
+import monitoring.core.metrics.HeapDumper;
 import monitoring.core.metrics.Metrics;
 import monitoring.core.som.Neuron;
 import monitoring.core.som.SOM;
@@ -18,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Date;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MalformedObjectNameException;
@@ -39,6 +41,8 @@ public class SOMPredictor implements MonitoringAsService {
     SystemStatus systemStatus;
     @Autowired
     WeightVector testVector;
+    @Autowired
+    HeapDumper heapDumper;
 
     private int last = 0;
     private int secondLast = 0;
@@ -46,6 +50,7 @@ public class SOMPredictor implements MonitoringAsService {
     private int normal = 0;
     private int cpu = 0;
     private int mem = 0;
+    private String heapFile = "/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/heap.hprof";
 
 
     @Override
@@ -108,6 +113,16 @@ public class SOMPredictor implements MonitoringAsService {
         } else {
             normal++;
             systemStatus.setSystemStatus("Normal");
+            //Assigning mem and cpu anomaly count to zero, if we identify normal behaviour again after anomaly.
+            // so when we identify again the anomaly the count will start from 0.
+            mem = 0;
+            cpu = 0;
+        }
+
+        //Heap dump will be performed when we identified more than five consecutive memory anomalies.
+        if (mem > 5) {
+            heapDumper.dumpHeap("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/heap-dump-file-"
+                    + getCurrentDateAndTime() + ".hprof", true);
         }
 
         logger.info(gson.toJson(systemStatus));
@@ -128,6 +143,11 @@ public class SOMPredictor implements MonitoringAsService {
         trainedSOM = (SOM) objectInputStream.readObject();
         objectInputStream.close();
         return trainedSOM;
+    }
+
+    private String getCurrentDateAndTime() {
+        Date d1 = new Date();
+        return String.valueOf(d1);
     }
 
 

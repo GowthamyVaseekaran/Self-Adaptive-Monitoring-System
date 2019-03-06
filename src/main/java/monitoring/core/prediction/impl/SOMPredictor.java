@@ -84,7 +84,6 @@ public class SOMPredictor implements MonitoringAsService {
         systemStatus.setHealthDeterminer(healthDeterminer);
 
         if (current == 1 && last == 1 && secondLast == 1) {
-            //   systemStatus.setSystemCurrentStatus("Anomaly");
             logger.info("Tring Tring Anomaly detected");
             systemStatus.setSystemStatus("CPU Anomaly");
             Neuron trainedNeuron = trainedSOM.getTrainedNeuron(testVector);

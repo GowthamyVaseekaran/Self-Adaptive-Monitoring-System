@@ -50,8 +50,6 @@ public class SOMPredictor implements MonitoringAsService {
     private int normal = 0;
     private int cpu = 0;
     private int mem = 0;
-    private String heapFile = "/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/heap.hprof";
-
 
     @Override
     public String getTrainedBestMatchNeuron() throws IOException, ClassNotFoundException,

@@ -55,11 +55,33 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sourceforge/javaml -->
+		<dependency>
+			<groupId>net.sourceforge</groupId>
+			<artifactId>javaml</artifactId>
+			<version>0.1.5</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.javacsv/javacsv -->
+		<dependency>
+			<groupId>net.sourceforge.javacsv</groupId>
+			<artifactId>javacsv</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>spantus</id>
+			<name>spantus sourceforge</name>
+			<url>http://spantus.sourceforge.net/maven/global/</url>
+		</repository>
+	</repositories>
 
 
 	<build>

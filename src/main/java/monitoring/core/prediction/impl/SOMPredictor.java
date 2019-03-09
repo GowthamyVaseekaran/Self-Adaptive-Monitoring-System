@@ -16,10 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.Date;
 
 import javax.management.InstanceNotFoundException;
@@ -62,6 +59,8 @@ public class SOMPredictor implements MonitoringAsService {
 
         double[] metrics = new double[2];
 
+       // Co_EfficentCalculator test = new Co_EfficentCalculator();
+
         systemStatus.setDiskLevelMetrics(metricsAgent.getDiskLevelMetrics());
         systemStatus.setThreadLevelMetrics(metricsAgent.getThreadLevelMetrics());
         systemStatus.setSystemLevelMetrics(metricsAgent.getSystemLevelMetrics());
@@ -97,11 +96,13 @@ public class SOMPredictor implements MonitoringAsService {
                 cpu++;
                 systemStatus.setSystemStatus(Constants.CPU_ANOMALY_TEXT);
                 logger.info("CPU " + cpu + " Anomaly detected cpu = " + metrics[0]);
+               // test.calculateCoEfficientCPU();
             } else if (prediction == 2) {
                 // if cause inference gives Memory as metric causing anomaly
                 mem++;
                 systemStatus.setSystemStatus(Constants.MEMORY_ANOMALY_TEXT);
                 logger.info("Mem " + mem + " Anomaly detected" + "   mem  " + metrics[1]);
+
             }
 
         } else if (current == 2 && last == 2 && secondLast == 2) {
@@ -113,15 +114,62 @@ public class SOMPredictor implements MonitoringAsService {
             systemStatus.setSystemStatus(Constants.NORMAL_STATE_TEXT);
             //Assigning mem and cpu anomaly count to zero, if we identify normal behaviour again after anomaly.
             // so when we identify again the anomaly the count will start from 0.
-            mem = 0;
-            cpu = 0;
+//            mem = 0;
+//            cpu = 0;
         }
 
-        //Heap dump will be performed when we identified more than five consecutive memory anomalies.
-        if (mem > 5) {
-            heapDumper.dumpHeap("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/heap-dump-file-"
-                    + getCurrentDateAndTime() + ".hprof", true);
+        try (FileWriter writer = new FileWriter("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/data.csv",true)) {
+
+            //System.out.println("test" + som.neurons.mapLength);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(healthDeterminer.getCpuUsage());
+            stringBuilder.append(",");
+            stringBuilder.append(healthDeterminer.getMemoryUsage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSystemLevelMetrics().getCommittedVirtualMemory());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSystemLevelMetrics().getFreePhycialMemory());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSystemLevelMetrics().getFreeSwapSize());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSystemLevelMetrics().getLoadAverage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSystemLevelMetrics().getTotalSwapSize());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSystemLevelMetrics().getFreeSwapSize());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSystemLevelMetrics().getUsedSwapPercentage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfReads());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfReadRequest());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfWrites());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfWriteRequests());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getThreadLevelMetrics().getTotalThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getThreadLevelMetrics().getDaemonThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getThreadLevelMetrics().getPeakThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getThreadLevelMetrics().getRunningThreadCount());
+
+            // stringBuilder.append(som.neurons[i][j].getState());
+            stringBuilder.append("\n");
+            writer.write(stringBuilder.toString());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
         }
+
+
+        //Heap dump will be performed when we identified more than five consecutive memory anomalies.
+//        if (mem > 20) {
+//            heapDumper.dumpHeap("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/heap-dump-file-"
+//                    + getCurrentDateAndTime() + ".hprof", true);
+//            mem=0;
+//        }
 
         logger.info(gson.toJson(systemStatus));
         return gson.toJson(systemStatus);

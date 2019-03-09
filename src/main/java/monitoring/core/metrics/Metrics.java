@@ -90,7 +90,7 @@ public final class Metrics {
         for (String command : runCommandToGetDiskLevelMetrics()) {
             String[] elements = command.split(Constants.SPLIT_BY_MULTIPLE_SPACE);
             diskLevelMetrics.setDiskName(elements[0]);
-            String[] diskUsageMetrics = elements[1].split("    ");
+            String[] diskUsageMetrics = elements[1].split("   ");
             diskLevelMetrics.setNoOfReadRequest(Double.parseDouble(diskUsageMetrics[0]));
             diskLevelMetrics.setNoOfWriteRequests(Double.parseDouble(diskUsageMetrics[1].split("   ")[0]));
             diskLevelMetrics.setNoOfReads(Double.parseDouble(diskUsageMetrics[2]));

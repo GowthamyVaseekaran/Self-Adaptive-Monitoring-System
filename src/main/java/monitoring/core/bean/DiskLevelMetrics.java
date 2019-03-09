@@ -7,13 +7,21 @@ public class DiskLevelMetrics {
 
     private String diskName;
     //The number of read requests that were issued to the device per second.
-    private double noOfReadRequest;
+    private double diskReadBytes;
     //The number of write requests that were issued to the device per second.
-    private double noOfWriteRequests;
+    private double diskWriteBytes;
     //number of kilobytes read per second
     private double noOfReads;
     //number of kilobytes written per second
     private double noOfWrites;
+
+    private double totalSpace;
+
+    private double usedSpace;
+
+    private double freeSpace;
+
+    private double fileCount;
 
     public String getDiskName() {
         return diskName;
@@ -23,20 +31,20 @@ public class DiskLevelMetrics {
         this.diskName = diskName;
     }
 
-    public double getNoOfReadRequest() {
-        return noOfReadRequest;
+    public double getDiskReadBytes() {
+        return diskReadBytes;
     }
 
-    public void setNoOfReadRequest(double noOfReadRequest) {
-        this.noOfReadRequest = noOfReadRequest;
+    public void setDiskReadBytes(double diskReadBytes) {
+        this.diskReadBytes = diskReadBytes;
     }
 
-    public double getNoOfWriteRequests() {
-        return noOfWriteRequests;
+    public double getDiskWriteBytes() {
+        return diskWriteBytes;
     }
 
-    public void setNoOfWriteRequests(double noOfWriteRequests) {
-        this.noOfWriteRequests = noOfWriteRequests;
+    public void setDiskWriteBytes(double diskWriteBytes) {
+        this.diskWriteBytes = diskWriteBytes;
     }
 
     public double getNoOfReads() {
@@ -53,5 +61,37 @@ public class DiskLevelMetrics {
 
     public void setNoOfWrites(double noOfWrites) {
         this.noOfWrites = noOfWrites;
+    }
+
+    public double getTotalSpace() {
+        return totalSpace;
+    }
+
+    public void setTotalSpace(double totalSpace) {
+        this.totalSpace = totalSpace;
+    }
+
+    public double getUsedSpace() {
+        return usedSpace;
+    }
+
+    public void setUsedSpace(double usedSpace) {
+        this.usedSpace = usedSpace;
+    }
+
+    public double getFreeSpace() {
+        return freeSpace;
+    }
+
+    public void setFreeSpace(double freeSpace) {
+        this.freeSpace = freeSpace;
+    }
+
+    public double getFileCount() {
+        return fileCount;
+    }
+
+    public void setFileCount(double fileCount) {
+        this.fileCount = fileCount;
     }
 }

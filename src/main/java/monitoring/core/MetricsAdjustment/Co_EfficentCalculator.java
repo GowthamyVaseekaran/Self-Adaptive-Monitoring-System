@@ -158,7 +158,6 @@ public class Co_EfficentCalculator {
         for (Map.Entry<String, Double> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
-
         return sortedMap;
     }
 
@@ -170,6 +169,4 @@ public class Co_EfficentCalculator {
             System.out.println(e.getKey() + ":" + e.getValue());
         }
     }
-
-
 }

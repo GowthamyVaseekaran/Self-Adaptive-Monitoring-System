@@ -3,12 +3,9 @@ package monitoring.core.metrics;
 import com.google.gson.Gson;
 import com.sun.management.OperatingSystemMXBean;
 
-import monitoring.core.bean.DiskLevelMetrics;
-import monitoring.core.bean.ProcessLevelMetrics;
-import monitoring.core.bean.SystemDetails;
-import monitoring.core.bean.SystemLevelMetrics;
-import monitoring.core.bean.ThreadLevelMetrics;
+import monitoring.core.bean.*;
 import monitoring.core.metrics.utils.Constants;
+import org.hyperic.sigar.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +37,7 @@ public final class Metrics {
     private static MBeanServer mBeanServer;
     private static OperatingSystemMXBean operatingSystemMXBean;
     private static ThreadMXBean threadMXBean;
+    private static Sigar sigar = new Sigar();
 
 
     public Metrics(String stringArgs) {
@@ -91,8 +89,8 @@ public final class Metrics {
             String[] elements = command.split(Constants.SPLIT_BY_MULTIPLE_SPACE);
             diskLevelMetrics.setDiskName(elements[0]);
             String[] diskUsageMetrics = elements[1].split("   ");
-            diskLevelMetrics.setNoOfReadRequest(Double.parseDouble(diskUsageMetrics[0]));
-            diskLevelMetrics.setNoOfWriteRequests(Double.parseDouble(diskUsageMetrics[1].split("   ")[0]));
+            diskLevelMetrics.setDiskReadBytes(Double.parseDouble(diskUsageMetrics[0]));
+            diskLevelMetrics.setDiskWriteBytes(Double.parseDouble(diskUsageMetrics[1].split("   ")[0]));
             diskLevelMetrics.setNoOfReads(Double.parseDouble(diskUsageMetrics[2]));
             diskLevelMetrics.setNoOfWrites(Double.parseDouble(diskUsageMetrics[3]));
         }
@@ -352,6 +350,81 @@ public final class Metrics {
         }
     }
 
+    public static FileSystem[] getFileSystem() throws SigarException {
+
+        return sigar.getFileSystemList();
+    }
+
+    public DiskLevelMetrics getDiskIO() throws SigarException {
+
+        FileSystem[] fs = getFileSystem();
+        DiskLevelMetrics diskLevelMetrics = new DiskLevelMetrics();
+        for (FileSystem f : fs) {
+
+            FileSystemUsage p = sigar.getFileSystemUsage(f.getDirName());
+
+            if (p.getTotal() > 0) {
+                diskLevelMetrics.setDiskName(f.getDevName());
+                diskLevelMetrics.setNoOfReads(p.getDiskReads());
+
+                diskLevelMetrics.setDiskReadBytes(Math.round(p.getDiskReadBytes()));
+                diskLevelMetrics.setNoOfWrites(p.getDiskWrites());
+                diskLevelMetrics.setDiskWriteBytes(p.getDiskWriteBytes());
+                diskLevelMetrics.setTotalSpace(1024 * p.getTotal());
+                diskLevelMetrics.setUsedSpace(1024 * p.getUsed());
+                diskLevelMetrics.setFreeSpace(1024 * p.getFree());
+                diskLevelMetrics.setFileCount(p.getFiles());
+
+                // System.out.println("testing"+1024 * p.getFreeFiles());
+            }
+
+        }
+
+       //LOGGER.info(diskLevelMetrics);
+        return diskLevelMetrics;
+    }
+
+
+    public  NetworkStats getIfstats() throws SigarException {
+        //_init();
+
+        String[] ifaces = sigar.getNetInterfaceList();
+        NetworkStats networkStats = new NetworkStats();
+
+        for (int i = 0; i < ifaces.length; i++) {
+            NetInterfaceConfig cfg = sigar.getNetInterfaceConfig(ifaces[i]);
+            if ((cfg.getFlags() & 1L) <= 0L || X.isSame(cfg.getAddress(), "0.0.0.0")) {
+                continue;
+            }
+
+            NetInterfaceStat s = sigar.getNetInterfaceStat(ifaces[i]);
+            networkStats.setAddress(cfg.getAddress());
+            networkStats.setName(cfg.getName());
+            networkStats.setRxbytes(String.valueOf(s.getRxBytes()));
+            networkStats.setRxdropped(String.valueOf(s.getRxDropped()));
+            networkStats.setRxerrors(String.valueOf(s.getRxErrors()));
+            networkStats.setRxFrame(String.valueOf(s.getRxFrame()));
+            networkStats.setRxOverRuns(String.valueOf(s.getRxOverruns()));
+            networkStats.setRxpackets(String.valueOf(s.getRxPackets()));
+            networkStats.setSpeed(String.valueOf(s.getSpeed()));
+            networkStats.setTxbytes(String.valueOf(s.getTxBytes()));
+            networkStats.setTxcarrier(String.valueOf(s.getTxCarrier()));
+            networkStats.setTxcollisions(String.valueOf(s.getTxCollisions()));
+            networkStats.setTxdropped(String.valueOf(s.getTxDropped()));
+            networkStats.setTxerrors(String.valueOf(s.getTxErrors()));
+            networkStats.setTxoverruns(String.valueOf(s.getTxOverruns()));
+            networkStats.setTxpackets(String.valueOf(s.getTxPackets()));
+        }
+
+//        for (Map.Entry<String, String> opo : l1.entrySet()) {
+//            System.out.println(opo.getKey() + " " + opo.getValue());
+//        }
+
+        return networkStats;
+    }
+
+
+//
 
 //        stats.put("maxMemory", Runtime.getRuntime().maxMemory());
 //        LOGGER.info("max memory " + Runtime.getRuntime().maxMemory());

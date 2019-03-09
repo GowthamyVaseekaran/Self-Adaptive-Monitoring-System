@@ -3,6 +3,7 @@ package monitoring.core.prediction.impl;
 import com.google.gson.Gson;
 
 import monitoring.core.bean.HealthDeterminer;
+import monitoring.core.bean.NetworkStats;
 import monitoring.core.bean.SystemStatus;
 import monitoring.core.metrics.HeapDumper;
 import monitoring.core.metrics.Metrics;
@@ -13,6 +14,7 @@ import monitoring.core.som.WeightVector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hyperic.sigar.SigarException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +53,7 @@ public class SOMPredictor implements MonitoringAsService {
 
     @Override
     public String getTrainedBestMatchNeuron() throws IOException, ClassNotFoundException,
-            MalformedObjectNameException, InstanceNotFoundException, ReflectionException {
+            MalformedObjectNameException, InstanceNotFoundException, ReflectionException, SigarException {
 
         trainedSOM = deSerialization("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/test.ser");
 
@@ -61,7 +63,7 @@ public class SOMPredictor implements MonitoringAsService {
 
        // Co_EfficentCalculator test = new Co_EfficentCalculator();
 
-        systemStatus.setDiskLevelMetrics(metricsAgent.getDiskLevelMetrics());
+        systemStatus.setDiskLevelMetrics(metricsAgent.getDiskIO());
         systemStatus.setThreadLevelMetrics(metricsAgent.getThreadLevelMetrics());
         systemStatus.setSystemLevelMetrics(metricsAgent.getSystemLevelMetrics());
 
@@ -72,6 +74,10 @@ public class SOMPredictor implements MonitoringAsService {
         HealthDeterminer healthDeterminer = new HealthDeterminer();
         healthDeterminer.setCpuUsage(metrics[0]);
         healthDeterminer.setMemoryUsage(metrics[1]);
+
+        //metricsAgent.getDiskIO();
+
+
 
         testVector = new WeightVector(metrics);
 
@@ -84,6 +90,10 @@ public class SOMPredictor implements MonitoringAsService {
         healthDeterminer.setSystemCurrentStatus(current);
 
         systemStatus.setHealthDeterminer(healthDeterminer);
+        NetworkStats networkStats = metricsAgent.getIfstats();
+        systemStatus.setNetworkStats(networkStats);
+
+        metricsAgent.getDiskIO();
 
         if (current == 1 && last == 1 && secondLast == 1) {
             logger.info("Tring Tring Anomaly detected");
@@ -130,8 +140,6 @@ public class SOMPredictor implements MonitoringAsService {
             stringBuilder.append(",");
             stringBuilder.append(systemStatus.getSystemLevelMetrics().getFreePhycialMemory());
             stringBuilder.append(",");
-            stringBuilder.append(systemStatus.getSystemLevelMetrics().getFreeSwapSize());
-            stringBuilder.append(",");
             stringBuilder.append(systemStatus.getSystemLevelMetrics().getLoadAverage());
             stringBuilder.append(",");
             stringBuilder.append(systemStatus.getSystemLevelMetrics().getTotalSwapSize());
@@ -142,11 +150,19 @@ public class SOMPredictor implements MonitoringAsService {
             stringBuilder.append(",");
             stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfReads());
             stringBuilder.append(",");
-            stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfReadRequest());
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getDiskReadBytes());
             stringBuilder.append(",");
             stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfWrites());
             stringBuilder.append(",");
-            stringBuilder.append(systemStatus.getDiskLevelMetrics().getNoOfWriteRequests());
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getDiskWriteBytes());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getTotalSpace());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getUsedSpace());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getFreeSpace());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDiskLevelMetrics().getFileCount());
             stringBuilder.append(",");
             stringBuilder.append(systemStatus.getThreadLevelMetrics().getTotalThreadCount());
             stringBuilder.append(",");
@@ -155,6 +171,35 @@ public class SOMPredictor implements MonitoringAsService {
             stringBuilder.append(systemStatus.getThreadLevelMetrics().getPeakThreadCount());
             stringBuilder.append(",");
             stringBuilder.append(systemStatus.getThreadLevelMetrics().getRunningThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getRxbytes());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getRxdropped());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getRxerrors());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getRxFrame());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getRxOverRuns());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getRxpackets());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getSpeed());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getTxbytes());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getTxcarrier());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getTxcollisions());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getTxdropped());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getTxerrors());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getRxOverRuns());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNetworkStats().getTxpackets());
+
 
             // stringBuilder.append(som.neurons[i][j].getState());
             stringBuilder.append("\n");

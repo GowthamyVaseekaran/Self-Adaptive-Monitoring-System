@@ -12,6 +12,7 @@ public class SystemStatus {
     private  DiskLevelMetrics diskLevelMetrics;
     private ThreadLevelMetrics threadLevelMetrics;
     private SystemLevelMetrics systemLevelMetrics;
+    private NetworkStats networkStats;
 
 
     public HealthDeterminer getHealthDeterminer() {
@@ -52,5 +53,13 @@ public class SystemStatus {
 
     public void setSystemStatus(String systemStatus) {
         this.systemStatus = systemStatus;
+    }
+
+    public NetworkStats getNetworkStats() {
+        return networkStats;
+    }
+
+    public void setNetworkStats(NetworkStats networkStats) {
+        this.networkStats = networkStats;
     }
 }

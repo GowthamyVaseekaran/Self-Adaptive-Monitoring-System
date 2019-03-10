@@ -106,7 +106,7 @@ public class SOMPredictor implements MonitoringAsService {
                 cpu++;
                 systemStatus.setSystemStatus(Constants.CPU_ANOMALY_TEXT);
                 logger.info("CPU " + cpu + " Anomaly detected cpu = " + metrics[0]);
-               // test.calculateCoEfficientCPU();
+               // test.returnCoEfficient();
             } else if (prediction == 2) {
                 // if cause inference gives Memory as metric causing anomaly
                 mem++;

@@ -87,7 +87,7 @@ public final class X {
     }
 
     /**
-     * test whether equals the two objects.
+     * trainWithMetrics whether equals the two objects.
      *
      * @param s1
      *            the object s1
@@ -206,7 +206,7 @@ public final class X {
     }
 
     /**
-     * test the object is empty? null , empty string, empty collection, empty map.
+     * trainWithMetrics the object is empty? null , empty string, empty collection, empty map.
      *
      * @param s
      *            the object, may string, list, map
@@ -289,7 +289,7 @@ public final class X {
             "零壹贰叁肆伍陆柒捌玖".toCharArray() };
 
     /**
-     * test the "s" and return a number, that convert Chinese number to real number.
+     * trainWithMetrics the "s" and return a number, that convert Chinese number to real number.
      *
      * @param s
      *            the s

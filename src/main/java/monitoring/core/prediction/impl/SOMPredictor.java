@@ -2,6 +2,7 @@ package monitoring.core.prediction.impl;
 
 import com.google.gson.Gson;
 
+import monitoring.core.MetricsAdjustment.Co_EfficentCalculator;
 import monitoring.core.bean.HealthDeterminer;
 import monitoring.core.bean.NetworkStats;
 import monitoring.core.bean.SystemStatus;
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MalformedObjectNameException;
@@ -43,6 +47,8 @@ public class SOMPredictor implements MonitoringAsService {
     WeightVector testVector;
     @Autowired
     HeapDumper heapDumper;
+    //@Autowired
+    private Map<String, Map<String, Double>> co_efficentCalculator;
 
     private int last = 0;
     private int secondLast = 0;
@@ -56,12 +62,20 @@ public class SOMPredictor implements MonitoringAsService {
             MalformedObjectNameException, InstanceNotFoundException, ReflectionException, SigarException {
 
         trainedSOM = deSerialization("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/test.ser");
+        co_efficentCalculator = metricsDeserilization("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/trainWithMetrics.ser");
+
+//        for (Map.Entry<String, Map<String, Double>> err : co_efficentCalculator.entrySet()) {
+//            for (Map.Entry<String, Double> rer : err.getValue().entrySet()) {
+//                System.out.println(err.getKey() + " " + rer.getKey() + " -> "+rer.getValue());
+//            }
+//        }
+
 
         Metrics metricsAgent = new Metrics("17014");
 
         double[] metrics = new double[2];
 
-       // Co_EfficentCalculator test = new Co_EfficentCalculator();
+        // Co_EfficentCalculator trainWithMetrics = new Co_EfficentCalculator();
 
         systemStatus.setDiskLevelMetrics(metricsAgent.getDiskIO());
         systemStatus.setThreadLevelMetrics(metricsAgent.getThreadLevelMetrics());
@@ -76,7 +90,6 @@ public class SOMPredictor implements MonitoringAsService {
         healthDeterminer.setMemoryUsage(metrics[1]);
 
         //metricsAgent.getDiskIO();
-
 
 
         testVector = new WeightVector(metrics);
@@ -106,7 +119,14 @@ public class SOMPredictor implements MonitoringAsService {
                 cpu++;
                 systemStatus.setSystemStatus(Constants.CPU_ANOMALY_TEXT);
                 logger.info("CPU " + cpu + " Anomaly detected cpu = " + metrics[0]);
-               // test.returnCoEfficient();
+                for (Map.Entry<String, Map<String, Double>> err : co_efficentCalculator.entrySet()) {
+                    for (Map.Entry<String, Double> rer : err.getValue().entrySet()) {
+                        if(err.getKey()== monitoring.core.MetricsAdjustment.utils.Constants.CPU_USAGE) {
+                            System.out.println(err.getKey() + " " + rer.getKey() + " -> " + rer.getValue());
+                        }
+                    }
+                }
+                // trainWithMetrics.returnCoEfficient();
             } else if (prediction == 2) {
                 // if cause inference gives Memory as metric causing anomaly
                 mem++;
@@ -128,9 +148,9 @@ public class SOMPredictor implements MonitoringAsService {
 //            cpu = 0;
         }
 
-        try (FileWriter writer = new FileWriter("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/data.csv",true)) {
+        try (FileWriter writer = new FileWriter("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/data.csv", true)) {
 
-            //System.out.println("test" + som.neurons.mapLength);
+            //System.out.println("trainWithMetrics" + som.neurons.mapLength);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(healthDeterminer.getCpuUsage());
             stringBuilder.append(",");
@@ -234,6 +254,16 @@ public class SOMPredictor implements MonitoringAsService {
         trainedSOM = (SOM) objectInputStream.readObject();
         objectInputStream.close();
         return trainedSOM;
+    }
+
+    private static Map<String, Map<String, Double>> metricsDeserilization(String file) throws IOException, ClassNotFoundException {
+        Map<String, Map<String, Double>> co_efficentCalculator = null;
+        FileInputStream fileInputStream = new FileInputStream(file);
+        // BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        co_efficentCalculator = (Map<String, Map<String, Double>>) objectInputStream.readObject();
+        objectInputStream.close();
+        return co_efficentCalculator;
     }
 
     private String getCurrentDateAndTime() {

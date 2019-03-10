@@ -70,7 +70,7 @@ public class LearningManager {
 
         //Write the elements to the file
         try (PrintWriter writer = new PrintWriter(
-                new File("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/test.csv"))) {
+                new File("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/trainWithMetrics.csv"))) {
             for (int i = 0; i < mapLength; i++) {
                 for (int j = 0; j < mapBreadth; j++) {
                     StringBuilder stringBuilder = new StringBuilder();

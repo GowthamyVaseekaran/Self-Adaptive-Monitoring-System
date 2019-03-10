@@ -202,7 +202,7 @@ public class SOM implements Serializable {
         accuracy = normalCount / (double) (inputSet.length);
     }
 
-    // function to test if given input vector is normal or anomalous
+    // function to trainWithMetrics if given input vector is normal or anomalous
     public int testInput(WeightVector input) {
         Neuron trainedNeuron = getTrainedNeuron(input);
         if (trainedNeuron.getState() == State.ANOMALOUS) {

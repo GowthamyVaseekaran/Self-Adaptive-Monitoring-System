@@ -5,15 +5,16 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
 import net.sf.javaml.distance.PearsonCorrelationCoefficient;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import com.csvreader.CsvReader;
+import org.springframework.stereotype.Component;
 
-public class Co_EfficentCalculator {
+@Component
+public class Co_EfficentCalculator implements Serializable {
+
+    private static final long serialVersionUID = 2000L;
 
     private static Instance cpuInstance = new SparseInstance(countNoOfLines());
     private static Instance memInstance = new SparseInstance(countNoOfLines());
@@ -94,10 +95,6 @@ public class Co_EfficentCalculator {
             ParseValueToInstanceObj(lineNo, cpu, memory, committedVM, freePhysicalMem, freeSwap, loadAvg, totalSwap, usedSwap, noOfRead, readRequest, noOfWrite, writeRequest, totalDiskSpace, usedDiskSpace, freeDiskSpace, fileCount, totalThreadCount, cpuInstance, memInstance, committedVMInstnce, freePhysicalMemInstance, freeSwapMemInstance, loadAvgInstance, totalSwapInstance, usedSwapInstance, npOfReadsInstance, noOfReadRequestInstance, noOfWriteInstance, noOfWriteRequestInstance, totalDiskSpaceInstance, usedDiskSpaceInstance, freeDiskSpaceInstance, fileCountInstance, totalThreadCountInstance);
             ParseValueToInstanceObj(lineNo, daemonThreadCount, peakThreadCount, runningThreadCount, rx_bytes, rx_dropped, rx_error, rx_frames, rx_overruns, rx_packets, speed, tx_bytes, tx_carrier, tx_collision, tx_dropped, tx_errors, tx_overruns, tx_packets, daemonThreadCountInstance, peakThreadCountInstance, runningThreadCountInstance, rx_bytesInstance, rx_droppedInstance, rx_errorInstance, rx_framesInstance, rx_overrunsnstance, rx_packetsInstance, speenInstance, tx_bytesInstance, tx_carrierInstance, tx_collisionsInstance, tx_droppedInstance, tx_errorInstance, tx_overrunsInstance, tx_packetsInstance);
 
-
-            // ParseValueToInstanceObj(lineNo, cpu, memory, committedVM, freePhysicalMem, freeSwap, loadAvg, totalSwap, usedSwap, cpuInstance, memInstance, committedVMInstnce, freePhysicalMemInstance, freeSwapMemInstance, loadAvgInstance, totalSwapInstance, usedSwapInstance);
-           // ParseValueToInstanceObj(lineNo, noOfRead, readRequest, noOfWrite, writeRequest, totalThreadCount, daemonThreadCount, peakThreadCount, runningThreadCount, npOfReadsInstance, noOfReadRequestInstance, noOfWriteInstance, noOfWriteRequestInstance, totalThreadCountInstance, daemonThreadCountInstance, peakThreadCountInstance, runningThreadCountInstance);
-            // System.out.println(cpu);
             lineNo++;
         }
         totalInstances.put(Constants.CPU_USAGE, cpuInstance);
@@ -162,14 +159,19 @@ public class Co_EfficentCalculator {
 
 
     private static Map<String, Double> calculateCoEfficient(Instance instance, Map<String, Instance> totalInstances) throws IOException {
-        readCSV();
+        //readCSV();
         Map<String, Double> list = new HashMap<>();
 
         PearsonCorrelationCoefficient pearsonCorrelationCoefficient = new PearsonCorrelationCoefficient();
         for (Map.Entry<String, Instance> e : totalInstances.entrySet()) {
             if (e.getValue() != instance) {
                 double coEff = pearsonCorrelationCoefficient.measure(instance, e.getValue());
-                list.put(e.getKey(), coEff);
+                //todo:newly added
+                //Co-eff - Only gets values greater than 0
+                if(coEff>0) {
+                    list.put(e.getKey(), coEff);
+                }
+
             }
 
         }
@@ -226,10 +228,75 @@ public class Co_EfficentCalculator {
 
 
 
-    public static void main(String args[]) throws IOException {
-        Map<String, Double> metricList = returnCoEfficient(memInstance, totalInstances);
-        for (Map.Entry<String, Double> e : metricList.entrySet()) {
-            System.out.println(e.getKey() + ":" + e.getValue());
+    private static  Map<String, List<String>> getBestMatchMetrics() throws IOException {
+        Map<String, List<String>> peopleByForename = new HashMap<>();
+        Map<String, Double> metricList = returnCoEfficient(cpuInstance, totalInstances);
+        List<String> bestMetricsList = new ArrayList<>();
+        for (Map.Entry<String, Double> best: metricList.entrySet()) {
+            if(best.getValue()>0) {
+               bestMetricsList.add(best.getKey());
+            }
+        }
+        peopleByForename.put(Constants.MEMORY_USAGE,bestMetricsList);
+        return peopleByForename;
+    }
+
+    public  Map<String, Map<String,Double>> trainWithMetrics() throws IOException {
+        readCSV();
+        Map<String, Map<String,Double>> peopleByForename = new HashMap<>();
+        for (Map.Entry<String, Instance> best: totalInstances.entrySet()) {
+            Map<String, Double> metricList = returnCoEfficient(best.getValue(), totalInstances);
+            peopleByForename.put(best.getKey(),metricList);
+        }
+
+        String fileName = "/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/trainWithMetrics.ser";
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+            //method to serialize the object
+            objectOutputStream.writeObject(peopleByForename);
+            objectOutputStream.close();
+            fileOutputStream.close();
+            System.out.println("metrics serialization done");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        //peopleByForename.put(me)
+        System.out.println("Successfully Trained");
+
+        return peopleByForename;
+    }
+
+
+    public void retrieveMap(Map<String, List<String>> map) {
+                for (Map.Entry<String, List<String>> e : map.entrySet()) {
+            for (String name:e.getValue()) {
+                System.out.println(name);
+            }
+
         }
     }
+
+
+
+    public static void main(String args[]) throws IOException {
+        //trainWithMetrics();
+//        for (Map.Entry<String, Map<String, Double>> err:trainWithMetrics().entrySet()) {
+//            for(Map.Entry<String,Double>rer:err.getValue().entrySet()) {
+//
+//                System.out.println(err.getKey()+" "+rer.getKey());
+//            }
+//        }
+//        Map<String, List<String>> metricList = getBestMatchMetrics();
+//        for (Map.Entry<String, List<String>> e : metricList.entrySet()) {
+//            for (String name:e.getValue()) {
+//                System.out.println(name);
+//            }
+//
+//        }
+       // getBestMatchMetrics();
+    }
+
+
 }

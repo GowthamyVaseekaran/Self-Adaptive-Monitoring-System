@@ -1,10 +1,12 @@
 package monitoring.core.training.impl;
 
 
+import monitoring.core.MetricsAdjustment.Co_EfficentCalculator;
 import monitoring.core.som.SOM;
 import monitoring.core.training.LearningManager;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * This class contains the implementation to train the SOM with the dataset.
@@ -12,12 +14,15 @@ import java.io.IOException;
 public class TrainingController {
     int inputDataSet;
     LearningManager learningManager;
+    Co_EfficentCalculator co_efficentCalculator;
     SOM trainedSOM;
     int cpuCap;    //CPU cap allocated to the VM
+    Map<String, Map<String,Double>> bestMatchMetrics;
 
     public TrainingController(int inputDataSet, File file1, File file) {
         this.inputDataSet = inputDataSet;
         learningManager = new LearningManager(inputDataSet, file1, file);
+        co_efficentCalculator = new Co_EfficentCalculator();
         cpuCap = 1;
     }
 
@@ -25,6 +30,12 @@ public class TrainingController {
     void startLearning() {
         Long startTime = System.currentTimeMillis();
         trainedSOM = learningManager.train();
+        //Training to find out the best match metrics.
+        try {
+            bestMatchMetrics = co_efficentCalculator.trainWithMetrics();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Long endTime = System.currentTimeMillis();
         Long trainningTime = endTime - startTime;
         System.out.println("Training Time (Minutes) " + trainningTime / 60000);

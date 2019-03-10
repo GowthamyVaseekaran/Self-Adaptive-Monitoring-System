@@ -6,10 +6,15 @@ package monitoring.core.bean;
 public class SystemLevelMetrics {
     private double cpuUsage;
     private double loadAverage;
+    private double cpuIdle;
+    private double cpuNice;
+    private double cpuUser;
+    private double cpuWait;
     private double totalPhysicalMemory;
     private double committedVirtualMemory;
     private double freePhycialMemory;
     private double usedMemoryPercentage;
+    private double ramUsage;
     private double totalSwapSize;
     private double freeSwapSize;
     private double usedSwapPercentage;
@@ -84,6 +89,46 @@ public class SystemLevelMetrics {
 
     public void setUsedSwapPercentage(double usedSwapPercentage) {
         this.usedSwapPercentage = usedSwapPercentage;
+    }
+
+    public double getCpuIdle() {
+        return cpuIdle;
+    }
+
+    public void setCpuIdle(double cpuIdle) {
+        this.cpuIdle = cpuIdle;
+    }
+
+    public double getCpuNice() {
+        return cpuNice;
+    }
+
+    public void setCpuNice(double cpuNice) {
+        this.cpuNice = cpuNice;
+    }
+
+    public double getCpuUser() {
+        return cpuUser;
+    }
+
+    public void setCpuUser(double cpuUser) {
+        this.cpuUser = cpuUser;
+    }
+
+    public double getCpuWait() {
+        return cpuWait;
+    }
+
+    public void setCpuWait(double cpuWait) {
+        this.cpuWait = cpuWait;
+    }
+
+    public double getRamUsage() {
+        return ramUsage;
+    }
+
+    public void setRamUsage(double ramUsage) {
+        this.ramUsage = ramUsage;
     }
 }
 

@@ -60,7 +60,7 @@ public final class Metrics {
         }
     }
 
-    public SystemLevelMetrics getSystemLevelMetrics() throws MalformedObjectNameException, InstanceNotFoundException, ReflectionException {
+    public SystemLevelMetrics getSystemLevelMetrics() throws MalformedObjectNameException, InstanceNotFoundException, ReflectionException, SigarException {
         SystemLevelMetrics systemLevelMetrics = new SystemLevelMetrics();
         systemLevelMetrics.setCpuUsage(getSystemCpuUsage());
         systemLevelMetrics.setLoadAverage(getSystemLoadAverage());
@@ -71,6 +71,11 @@ public final class Metrics {
         systemLevelMetrics.setTotalSwapSize(getTotalSwapSpaceSize());
         systemLevelMetrics.setFreeSwapSize(getFreeSwapSize());
         systemLevelMetrics.setUsedSwapPercentage(getUsedSwapPercentage());
+        systemLevelMetrics.setCpuIdle(sigar.getCpu().getIdle());
+        systemLevelMetrics.setCpuNice(sigar.getCpu().getNice());
+        systemLevelMetrics.setCpuUser(sigar.getCpu().getUser());
+        systemLevelMetrics.setCpuWait(sigar.getCpu().getWait());
+        systemLevelMetrics.setRamUsage( sigar.getMem().getRam());
         return systemLevelMetrics;
     }
 

@@ -9,17 +9,20 @@ import java.io.*;
 import java.util.*;
 
 import com.csvreader.CsvReader;
-import org.springframework.stereotype.Component;
 
-@Component
 public class Co_EfficentCalculator implements Serializable {
 
     private static final long serialVersionUID = 2000L;
 
     private static Instance cpuInstance = new SparseInstance(countNoOfLines());
     private static Instance memInstance = new SparseInstance(countNoOfLines());
+    private static Instance cpuIdleInstance = new SparseInstance(countNoOfLines());
+    private static Instance cpuNiceInstance = new SparseInstance(countNoOfLines());
+    private static Instance cpuUserInstance = new SparseInstance(countNoOfLines());
+    private static Instance cpuWaitInstance = new SparseInstance(countNoOfLines());
     private static Instance committedVMInstnce = new SparseInstance(countNoOfLines());
     private static Instance freePhysicalMemInstance = new SparseInstance(countNoOfLines());
+    private static Instance ramUsageInstance = new SparseInstance(countNoOfLines());
     private static Instance freeSwapMemInstance = new SparseInstance(countNoOfLines());
     private static Instance loadAvgInstance = new SparseInstance(countNoOfLines());
     private static Instance totalSwapInstance = new SparseInstance(countNoOfLines());
@@ -59,8 +62,13 @@ public class Co_EfficentCalculator implements Serializable {
         while (metrics.readRecord()) {
             double cpu = Double.parseDouble(metrics.get(Constants.CPU_USAGE));
             double memory = Double.parseDouble(metrics.get(Constants.MEMORY_USAGE));
+            double cpuIdle = Double.parseDouble(metrics.get(Constants.CPU_IDLE));
+            double cpuNice = Double.parseDouble(metrics.get(Constants.CPU_NICE));
+            double cpuUser = Double.parseDouble(metrics.get(Constants.CPU_USER));
+            double cpuWait = Double.parseDouble(metrics.get(Constants.CPU_WAIT));
             double committedVM = Double.parseDouble(metrics.get(Constants.COMMITTED_VM));
             double freePhysicalMem = Double.parseDouble(metrics.get(Constants.FREE_PHYSICAL_MEMORY));
+            double ramUsage = Double.parseDouble(metrics.get(Constants.RAM_USAGE));
             double freeSwap = Double.parseDouble(metrics.get(Constants.FREE_SWAP_USAGE));
             double loadAvg = Double.parseDouble(metrics.get(Constants.LOAD_AVERAGE));
             double totalSwap = Double.parseDouble(metrics.get(Constants.TOTAL_SWAP_SIZE));
@@ -92,15 +100,61 @@ public class Co_EfficentCalculator implements Serializable {
             double tx_overruns = Double.parseDouble(metrics.get(Constants.TX_OVERRUNS));
             double tx_packets = Double.parseDouble(metrics.get(Constants.TX_PACKETS));
 
-            ParseValueToInstanceObj(lineNo, cpu, memory, committedVM, freePhysicalMem, freeSwap, loadAvg, totalSwap, usedSwap, noOfRead, readRequest, noOfWrite, writeRequest, totalDiskSpace, usedDiskSpace, freeDiskSpace, fileCount, totalThreadCount, cpuInstance, memInstance, committedVMInstnce, freePhysicalMemInstance, freeSwapMemInstance, loadAvgInstance, totalSwapInstance, usedSwapInstance, npOfReadsInstance, noOfReadRequestInstance, noOfWriteInstance, noOfWriteRequestInstance, totalDiskSpaceInstance, usedDiskSpaceInstance, freeDiskSpaceInstance, fileCountInstance, totalThreadCountInstance);
-            ParseValueToInstanceObj(lineNo, daemonThreadCount, peakThreadCount, runningThreadCount, rx_bytes, rx_dropped, rx_error, rx_frames, rx_overruns, rx_packets, speed, tx_bytes, tx_carrier, tx_collision, tx_dropped, tx_errors, tx_overruns, tx_packets, daemonThreadCountInstance, peakThreadCountInstance, runningThreadCountInstance, rx_bytesInstance, rx_droppedInstance, rx_errorInstance, rx_framesInstance, rx_overrunsnstance, rx_packetsInstance, speenInstance, tx_bytesInstance, tx_carrierInstance, tx_collisionsInstance, tx_droppedInstance, tx_errorInstance, tx_overrunsInstance, tx_packetsInstance);
+            cpuInstance.put(lineNo,cpu);
+            memInstance.put(lineNo, memory);
+            cpuIdleInstance.put(lineNo,cpuIdle);
+            cpuNiceInstance.put(lineNo,cpuNice);
+            cpuUserInstance.put(lineNo,cpuUser);
+            cpuWaitInstance.put(lineNo,cpuWait);
+            committedVMInstnce.put(lineNo,committedVM);
+            freePhysicalMemInstance.put(lineNo,freePhysicalMem);
+            ramUsageInstance.put(lineNo,ramUsage);
+            freeSwapMemInstance.put(lineNo,freeSwap);
+            loadAvgInstance.put(lineNo,loadAvg);
+            totalSwapInstance.put(lineNo,totalSwap);
+            usedSwapInstance.put(lineNo,usedSwap);
+            npOfReadsInstance.put(lineNo,noOfRead);
+            noOfWriteInstance.put(lineNo,noOfWrite);
+            noOfWriteRequestInstance.put(lineNo,writeRequest);
+            noOfReadRequestInstance.put(lineNo,readRequest);
+            totalDiskSpaceInstance.put(lineNo,totalDiskSpace);
+            usedDiskSpaceInstance.put(lineNo,usedDiskSpace);
+            freeDiskSpaceInstance.put(lineNo,freeDiskSpace);
+            fileCountInstance.put(lineNo,fileCount);
+            totalThreadCountInstance.put(lineNo,totalThreadCount);
+            daemonThreadCountInstance.put(lineNo,daemonThreadCount);
+            peakThreadCountInstance.put(lineNo,peakThreadCount);
+            runningThreadCountInstance.put(lineNo,runningThreadCount);
+            rx_bytesInstance.put(lineNo,rx_bytes);
+            rx_droppedInstance.put(lineNo,rx_dropped);
+            rx_errorInstance.put(lineNo,rx_error);
+            rx_framesInstance.put(lineNo,rx_frames);
+            rx_overrunsnstance.put(lineNo,rx_overruns);
+            rx_packetsInstance.put(lineNo,rx_packets);
+            tx_packetsInstance.put(lineNo,tx_packets);
+            speenInstance.put(lineNo,speed);
+            tx_bytesInstance.put(lineNo,tx_bytes);
+            tx_carrierInstance.put(lineNo,tx_carrier);
+            tx_collisionsInstance.put(lineNo,tx_collision);
+            tx_droppedInstance.put(lineNo,tx_dropped);
+            tx_errorInstance.put(lineNo,tx_errors);
+            tx_overrunsInstance.put(lineNo,tx_overruns);
+            tx_packetsInstance.put(lineNo,tx_packets);
+
+          //  ParseValueToInstanceObj(lineNo, cpu, memory, committedVM, freePhysicalMem, freeSwap, loadAvg, totalSwap, usedSwap, noOfRead, readRequest, noOfWrite, writeRequest, totalDiskSpace, usedDiskSpace, freeDiskSpace, fileCount, totalThreadCount, cpuInstance, memInstance, committedVMInstnce, freePhysicalMemInstance, freeSwapMemInstance, loadAvgInstance, totalSwapInstance, usedSwapInstance, npOfReadsInstance, noOfReadRequestInstance, noOfWriteInstance, noOfWriteRequestInstance, totalDiskSpaceInstance, usedDiskSpaceInstance, freeDiskSpaceInstance, fileCountInstance, totalThreadCountInstance);
+            //ParseValueToInstanceObj(lineNo, daemonThreadCount, peakThreadCount, runningThreadCount, rx_bytes, rx_dropped, rx_error, rx_frames, rx_overruns, rx_packets, speed, tx_bytes, tx_carrier, tx_collision, tx_dropped, tx_errors, tx_overruns, tx_packets, daemonThreadCountInstance, peakThreadCountInstance, runningThreadCountInstance, rx_bytesInstance, rx_droppedInstance, rx_errorInstance, rx_framesInstance, rx_overrunsnstance, rx_packetsInstance, speenInstance, tx_bytesInstance, tx_carrierInstance, tx_collisionsInstance, tx_droppedInstance, tx_errorInstance, tx_overrunsInstance, tx_packetsInstance);
 
             lineNo++;
         }
         totalInstances.put(Constants.CPU_USAGE, cpuInstance);
         totalInstances.put(Constants.MEMORY_USAGE, memInstance);
+        totalInstances.put(Constants.CPU_IDLE, cpuIdleInstance);
+        totalInstances.put(Constants.CPU_NICE,cpuNiceInstance);
+        totalInstances.put(Constants.CPU_USER,cpuUserInstance);
+        totalInstances.put(Constants.CPU_WAIT,cpuWaitInstance);
         totalInstances.put(Constants.COMMITTED_VM, committedVMInstnce);
         totalInstances.put(Constants.FREE_PHYSICAL_MEMORY, freePhysicalMemInstance);
+        totalInstances.put(Constants.RAM_USAGE,ramUsageInstance);
         totalInstances.put(Constants.FREE_SWAP_USAGE, freeSwapMemInstance);
         totalInstances.put(Constants.LOAD_AVERAGE, loadAvgInstance);
         totalInstances.put(Constants.TOTAL_SWAP_SIZE, totalSwapInstance);
@@ -134,22 +188,22 @@ public class Co_EfficentCalculator implements Serializable {
 
     }
 
-    private static void ParseValueToInstanceObj(int lineNo, double daemonThreadCount, double peakThreadCount, double runningThreadCount, double rx_bytes, double rx_dropped, double rx_error, double rx_frames, double rx_overruns, double rx_packets, double speed, double tx_bytes, double tx_carrier, double tx_collision, double tx_dropped, double tx_errors, double tx_overruns, double tx_packets, Instance daemonThreadCountInstance, Instance peakThreadCountInstance, Instance runningThreadCountInstance, Instance rx_bytesInstance, Instance rx_droppedInstance, Instance rx_errorInstance, Instance rx_framesInstance, Instance rx_overrunsnstance, Instance rx_packetsInstance, Instance speenInstance, Instance tx_bytesInstance, Instance tx_carrierInstance, Instance tx_collisionsInstance, Instance tx_droppedInstance, Instance tx_errorInstance, Instance tx_overrunsInstance, Instance tx_packetsInstance) {
-        addToInstance(lineNo, daemonThreadCount, peakThreadCount, runningThreadCount, rx_bytes, rx_dropped, rx_error, rx_frames, rx_overruns, daemonThreadCountInstance, peakThreadCountInstance, runningThreadCountInstance, rx_bytesInstance, rx_droppedInstance, rx_errorInstance, rx_framesInstance, rx_overrunsnstance);
-        addToInstance(lineNo, rx_packets, speed, tx_bytes, tx_carrier, tx_collision, tx_dropped, tx_errors, tx_overruns, rx_packetsInstance, speenInstance, tx_bytesInstance, tx_carrierInstance, tx_collisionsInstance, tx_droppedInstance, tx_errorInstance, tx_overrunsInstance);
-        tx_packetsInstance.put(lineNo,tx_packets);
-    }
+//    private static void ParseValueToInstanceObj(int lineNo, double daemonThreadCount, double peakThreadCount, double runningThreadCount, double rx_bytes, double rx_dropped, double rx_error, double rx_frames, double rx_overruns, double rx_packets, double speed, double tx_bytes, double tx_carrier, double tx_collision, double tx_dropped, double tx_errors, double tx_overruns, double tx_packets, Instance daemonThreadCountInstance, Instance peakThreadCountInstance, Instance runningThreadCountInstance, Instance rx_bytesInstance, Instance rx_droppedInstance, Instance rx_errorInstance, Instance rx_framesInstance, Instance rx_overrunsnstance, Instance rx_packetsInstance, Instance speenInstance, Instance tx_bytesInstance, Instance tx_carrierInstance, Instance tx_collisionsInstance, Instance tx_droppedInstance, Instance tx_errorInstance, Instance tx_overrunsInstance, Instance tx_packetsInstance) {
+//        addToInstance(lineNo, daemonThreadCount, peakThreadCount, runningThreadCount, rx_bytes, rx_dropped, rx_error, rx_frames, rx_overruns, daemonThreadCountInstance, peakThreadCountInstance, runningThreadCountInstance, rx_bytesInstance, rx_droppedInstance, rx_errorInstance, rx_framesInstance, rx_overrunsnstance);
+//        addToInstance(lineNo, rx_packets, speed, tx_bytes, tx_carrier, tx_collision, tx_dropped, tx_errors, tx_overruns, rx_packetsInstance, speenInstance, tx_bytesInstance, tx_carrierInstance, tx_collisionsInstance, tx_droppedInstance, tx_errorInstance, tx_overrunsInstance);
+////        tx_packetsInstance.put(lineNo,tx_packets);
+//    }
 
-    private static void addToInstance(int lineNo, double daemonThreadCount, double peakThreadCount, double runningThreadCount, double rx_bytes, double rx_dropped, double rx_error, double rx_frames, double rx_overruns, Instance daemonThreadCountInstance, Instance peakThreadCountInstance, Instance runningThreadCountInstance, Instance rx_bytesInstance, Instance rx_droppedInstance, Instance rx_errorInstance, Instance rx_framesInstance, Instance rx_overrunsnstance) {
-        daemonThreadCountInstance.put(lineNo,daemonThreadCount);
-        peakThreadCountInstance.put(lineNo,peakThreadCount);
-        runningThreadCountInstance.put(lineNo,runningThreadCount);
-        rx_bytesInstance.put(lineNo,rx_bytes);
-        rx_droppedInstance.put(lineNo,rx_dropped);
-        rx_errorInstance.put(lineNo,rx_error);
-        rx_framesInstance.put(lineNo,rx_frames);
-        rx_overrunsnstance.put(lineNo,rx_overruns);
-    }
+//    private static void addToInstance(int lineNo, double daemonThreadCount, double peakThreadCount, double runningThreadCount, double rx_bytes, double rx_dropped, double rx_error, double rx_frames, double rx_overruns, Instance daemonThreadCountInstance, Instance peakThreadCountInstance, Instance runningThreadCountInstance, Instance rx_bytesInstance, Instance rx_droppedInstance, Instance rx_errorInstance, Instance rx_framesInstance, Instance rx_overrunsnstance) {
+//        daemonThreadCountInstance.put(lineNo,daemonThreadCount);
+//        peakThreadCountInstance.put(lineNo,peakThreadCount);
+//        runningThreadCountInstance.put(lineNo,runningThreadCount);
+//        rx_bytesInstance.put(lineNo,rx_bytes);
+//        rx_droppedInstance.put(lineNo,rx_dropped);
+//        rx_errorInstance.put(lineNo,rx_error);
+//        rx_framesInstance.put(lineNo,rx_frames);
+//        rx_overrunsnstance.put(lineNo,rx_overruns);
+//    }
 
 
     public static Map<String, Double> returnCoEfficient(Instance instance, Map<String, Instance> totalInstances) throws IOException {
@@ -166,9 +220,8 @@ public class Co_EfficentCalculator implements Serializable {
         for (Map.Entry<String, Instance> e : totalInstances.entrySet()) {
             if (e.getValue() != instance) {
                 double coEff = pearsonCorrelationCoefficient.measure(instance, e.getValue());
-                //todo:newly added
                 //Co-eff - Only gets values greater than 0
-                if(coEff>0) {
+                if(!Double.isNaN(coEff)) {
                     list.put(e.getKey(), coEff);
                 }
 
@@ -241,7 +294,7 @@ public class Co_EfficentCalculator implements Serializable {
         return peopleByForename;
     }
 
-    public  Map<String, Map<String,Double>> trainWithMetrics() throws IOException {
+    public static  Map<String, Map<String,Double>> trainWithMetrics() throws IOException {
         readCSV();
         Map<String, Map<String,Double>> peopleByForename = new HashMap<>();
         for (Map.Entry<String, Instance> best: totalInstances.entrySet()) {
@@ -258,7 +311,7 @@ public class Co_EfficentCalculator implements Serializable {
             objectOutputStream.writeObject(peopleByForename);
             objectOutputStream.close();
             fileOutputStream.close();
-            System.out.println("metrics serialization done");
+            System.out.println("Metrics serialization done");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -282,12 +335,12 @@ public class Co_EfficentCalculator implements Serializable {
 
     public static void main(String args[]) throws IOException {
         //trainWithMetrics();
-//        for (Map.Entry<String, Map<String, Double>> err:trainWithMetrics().entrySet()) {
-//            for(Map.Entry<String,Double>rer:err.getValue().entrySet()) {
-//
-//                System.out.println(err.getKey()+" "+rer.getKey());
-//            }
-//        }
+        for (Map.Entry<String, Map<String, Double>> err:trainWithMetrics().entrySet()) {
+            for(Map.Entry<String,Double>rer:err.getValue().entrySet()) {
+
+                System.out.println(err.getKey()+" "+rer.getKey() +"->"+rer.getValue());
+            }
+        }
 //        Map<String, List<String>> metricList = getBestMatchMetrics();
 //        for (Map.Entry<String, List<String>> e : metricList.entrySet()) {
 //            for (String name:e.getValue()) {

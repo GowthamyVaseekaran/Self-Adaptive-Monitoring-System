@@ -3,8 +3,13 @@ package monitoring.core.MetricsAdjustment.utils;
 public class Constants {
     public static final String CPU_USAGE = "CPU";
     public static final String MEMORY_USAGE = "Memory";
+    public static final String CPU_IDLE = "CPU Idle";
+    public static final String CPU_NICE = "CPU Nice";
+    public static final String CPU_USER = "CPU User";
+    public static final String CPU_WAIT = "CPU Wait";
     public static final String COMMITTED_VM = "Committed VM";
     public static final String FREE_PHYSICAL_MEMORY ="Free Physical Mem";
+    public static final String RAM_USAGE = "RAM";
     public static final String FREE_SWAP_USAGE = "Free swap";
     public static final String LOAD_AVERAGE = "Load Avg";
     public static final String TOTAL_SWAP_SIZE = "Total Swap";

@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * This class contains the implementation to train the SOM with the dataset.
  */
+
 public class TrainingController {
     int inputDataSet;
     LearningManager learningManager;
@@ -30,7 +31,7 @@ public class TrainingController {
     void startLearning() {
         Long startTime = System.currentTimeMillis();
         trainedSOM = learningManager.train();
-        //Training to find out the best match metrics.
+        //Training to find out the best match Metrics.
         try {
             bestMatchMetrics = co_efficentCalculator.trainWithMetrics();
         } catch (IOException e) {

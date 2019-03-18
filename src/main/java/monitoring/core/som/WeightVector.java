@@ -14,7 +14,7 @@ import java.util.Random;
 public class WeightVector implements Serializable {
     private static final Log logger = LogFactory.getLog(WeightVector.class);
 
-    // number of metrics being collected
+    // number of Metrics being collected
     private int size = 2;
 
     private double[] vector = new double[size];

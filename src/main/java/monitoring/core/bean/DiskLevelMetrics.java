@@ -1,7 +1,7 @@
 package monitoring.core.bean;
 
 /**
- * Bean class for disk level metrics.
+ * Bean class for disk level Metrics.
  */
 public class DiskLevelMetrics {
 
@@ -22,6 +22,16 @@ public class DiskLevelMetrics {
     private double freeSpace;
 
     private double fileCount;
+
+    private double usedPercentage;
+
+    public double getUsedPercentage() {
+        return usedPercentage;
+    }
+
+    public void setUsedPercentage(double usedPercentage) {
+        this.usedPercentage = usedPercentage;
+    }
 
     public String getDiskName() {
         return diskName;

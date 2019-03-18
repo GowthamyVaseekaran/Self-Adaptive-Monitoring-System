@@ -1,7 +1,7 @@
 package monitoring.core.bean;
 
 /**
- * Bean class for process level metrics.
+ * Bean class for process level Metrics.
  */
 public class ProcessLevelMetrics {
     private String  processcpuPercentage;

@@ -1,12 +1,18 @@
 package monitoring.core.configuration;
 
+import monitoring.core.Entities.DBConfiguration.MetricInfoDao;
+import monitoring.core.Entities.DBConfiguration.TestRepository;
 import monitoring.core.som.WeightVector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -17,6 +23,9 @@ public class FileParser {
     private Scanner cpuScanner;
     private Scanner memScanner;
     private static final Log logger = LogFactory.getLog(FileParser.class);
+
+    @Autowired
+    TestRepository testRepository;
 
     public FileParser(File cpuLog, File memLog) {
         try {
@@ -30,7 +39,11 @@ public class FileParser {
 
     }
 
-    // function to read metrics from the cpu and mem logs and create list of WeightVectors
+    public FileParser() {
+
+    }
+
+    // function to read Metrics from the cpu and mem logs and create list of WeightVectors
     public ArrayList<WeightVector> createWeightVectors(int length) {
 
         ArrayList<WeightVector> vectors = new ArrayList<WeightVector>();
@@ -82,5 +95,109 @@ public class FileParser {
             i++;
         }
         return vectors;
+    }
+
+    private MetricInfoDao transform(monitoring.core.Entities.DBConfiguration.Metrics metircsInfoEntity)
+    {
+        MetricInfoDao metricInfoDao = new MetricInfoDao();
+        metricInfoDao.setCpu(metircsInfoEntity.getCpu());
+        metricInfoDao.setMemory(metircsInfoEntity.getMemory());
+        return metricInfoDao;
+    }
+
+    public List<MetricInfoDao> findAllCpuInfo() {
+        List<MetricInfoDao> returnList = new ArrayList<>();
+        List<monitoring.core.Entities.DBConfiguration.Metrics> allCpuInfo = testRepository.findAll();
+        for (monitoring.core.Entities.DBConfiguration.Metrics cpu : allCpuInfo)
+        {
+            returnList.add(transform(cpu));
+
+        }
+
+        for (MetricInfoDao test: returnList) {
+            logger.info("cpu"+test.getCpu());
+            logger.info("memory"+test.getMemory());
+        }
+        return returnList;
+    }
+
+    public ArrayList<WeightVector> createWeightVectors1() {
+
+        ArrayList<WeightVector> vectors = new ArrayList<WeightVector>();
+        String line = null;
+        int i = 0;
+
+
+//        List<MetricInfoDao> returnList = new ArrayList<>();
+//        List<monitoring.core.Entities.DBConfiguration.Metrics> allCpuInfo = testRepository.findAll();
+//        for (monitoring.core.Entities.DBConfiguration.Metrics cpu : allCpuInfo)
+//        {
+//            returnList.add(transform(cpu));
+//
+//        }
+        findAllCpuInfo();
+
+//        for (MetricInfoDao test: findAllCpuInfo()) {
+//            double[] metrics = new double[2];
+//            // read CPU metric change to 6 *100
+//            metrics[0] = (Math.round((Double.parseDouble(test.getCpu()))));
+//            double totMem = (Double.parseDouble(test.getMemory()));
+//
+//            // normalize mem metric
+//            metrics[1] = Math.round(totMem);
+//
+//           // logger.info("cpu"+test.getCpu());
+//           // logger.info("memory"+test.getMemory());
+//            vectors.add(new WeightVector(metrics));
+//        }
+        return vectors;
+
+
+
+//        // while there are more entries in the logs
+//        while (i < length && cpuScanner.hasNextLine() && memScanner.hasNextLine()) {
+//            // int j=0;
+//            // while(j<6 && cpuScanner.hasNextLine()) {
+//            line = cpuScanner.nextLine();
+//            //    j++;
+//            //  }
+//            String[] strings = line.split(",");
+//            ArrayList<String> data = new ArrayList<String>();
+//            for (String s: strings) {
+//                if (s != null && s.length() > 0) {
+//                    data.add(s);
+//                }
+//            }
+//
+//            double[] metrics = new double[2];
+//            // read CPU metric change to 6 *100
+//            metrics[0] = (Math.round((Double.parseDouble(data.get(6)) * 100)));
+//
+//            // j=0;
+//            // while(j<2 && memScanner.hasNextLine()) {
+//            line = memScanner.nextLine();
+//            //     j++;
+//            // }
+//            strings = line.split(",");
+//            data = new ArrayList<String>();
+//            for (String s: strings) {
+//                if (s != null && s.length() > 0) {
+//                    data.add(s);
+//                }
+//            }
+//            //*100
+//            double totMem = (Double.parseDouble(data.get(1)) * 100);
+//
+//            // normalize mem metric
+//            metrics[1] = Math.round(totMem);
+////            j=0;
+////            while(j<2 && memScanner.hasNextLine()) {
+////                line = memScanner.nextLine();
+////                j++;
+////            }
+//            vectors.add(new WeightVector(metrics));
+//            i++;
+//        }
+//        return vectors;
     }
 }

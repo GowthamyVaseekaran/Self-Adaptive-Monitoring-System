@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -24,7 +27,7 @@ import javax.management.ReflectionException;
 
 
 /**
- * Implementation for metrics class.
+ * Implementation for Metrics class.
  */
 @SuppressWarnings("CheckStyle")
 public final class Metrics {
@@ -60,23 +63,46 @@ public final class Metrics {
         }
     }
 
+
     public SystemLevelMetrics getSystemLevelMetrics() throws MalformedObjectNameException, InstanceNotFoundException, ReflectionException, SigarException {
         SystemLevelMetrics systemLevelMetrics = new SystemLevelMetrics();
         systemLevelMetrics.setCpuUsage(getSystemCpuUsage());
-        systemLevelMetrics.setLoadAverage(getSystemLoadAverage());
-        systemLevelMetrics.setTotalPhysicalMemory(getTotalPhysicalMemory());
-        systemLevelMetrics.setCommittedVirtualMemory(getCommittedVirtualMemorySize());
-        systemLevelMetrics.setFreePhycialMemory(getFreePhysicalMemory());
         systemLevelMetrics.setUsedMemoryPercentage(getUsedPhysicalMemory());
-        systemLevelMetrics.setTotalSwapSize(getTotalSwapSpaceSize());
-        systemLevelMetrics.setFreeSwapSize(getFreeSwapSize());
-        systemLevelMetrics.setUsedSwapPercentage(getUsedSwapPercentage());
-        systemLevelMetrics.setCpuIdle(sigar.getCpu().getIdle());
-        systemLevelMetrics.setCpuNice(sigar.getCpu().getNice());
-        systemLevelMetrics.setCpuUser(sigar.getCpu().getUser());
-        systemLevelMetrics.setCpuWait(sigar.getCpu().getWait());
-        systemLevelMetrics.setRamUsage( sigar.getMem().getRam());
+        // TODO: 3/13/19 COMMENT IT 
+//        systemLevelMetrics.setLoadAverage(getSystemLoadAverage());
+//        systemLevelMetrics.setTotalPhysicalMemory(getTotalPhysicalMemory());
+//        systemLevelMetrics.setCommittedVirtualMemory(getCommittedVirtualMemorySize());
+//        systemLevelMetrics.setFreePhycialMemory(getFreePhysicalMemory());
+//        systemLevelMetrics.setTotalSwapSize(getTotalSwapSpaceSize());
+//        systemLevelMetrics.setFreeSwapSize(getFreeSwapSize());
+//        systemLevelMetrics.setUsedSwapPercentage(getUsedSwapPercentage());
+//        systemLevelMetrics.setCpuIdle(getCPUIdle());
+//        systemLevelMetrics.setCpuNice(getCPUNice());
+//        systemLevelMetrics.setCpuUser(getCPUUser());
+//        systemLevelMetrics.setCpuWait(getCPUWait());
+//        systemLevelMetrics.setRamUsage( getRAMUsage());
         return systemLevelMetrics;
+    }
+
+
+    public double getCPUIdle() throws SigarException {
+        return sigar.getCpu().getIdle();
+    }
+
+    public double getCPUNice() throws SigarException {
+        return sigar.getCpu().getNice();
+    }
+
+    public double getCPUUser() throws SigarException {
+        return sigar.getCpu().getUser();
+    }
+
+    public double getCPUWait() throws  SigarException {
+        return sigar.getCpu().getWait();
+    }
+
+    public double getRAMUsage() throws SigarException {
+        return sigar.getMem().getRam();
     }
 
     public ThreadLevelMetrics getThreadLevelMetrics() {
@@ -184,7 +210,7 @@ public final class Metrics {
         return ((int) (cpuValue * 1000) / 10.0);
     }
 
-    private double getSystemLoadAverage() throws
+    public double getSystemLoadAverage() throws
             MalformedObjectNameException, ReflectionException, InstanceNotFoundException {
         mBeanServer = ManagementFactory.getPlatformMBeanServer();
         ObjectName objectName = ObjectName.getInstance(Constants.OPERATING_SYSTEM);
@@ -200,7 +226,7 @@ public final class Metrics {
     }
 
     //    Host memory size in in mega bytes.
-    private static double getTotalPhysicalMemory() {
+    public  double getTotalPhysicalMemory() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double totalMemory = (operatingSystemMXBean.getTotalPhysicalMemorySize()) / (1024 * 1024);
         if (totalMemory == 0.00d) {
@@ -210,7 +236,7 @@ public final class Metrics {
         return totalMemory;
     }
 
-    private static double getCommittedVirtualMemorySize() {
+    public  double getCommittedVirtualMemorySize() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double committedVirtualMemory = (operatingSystemMXBean.getCommittedVirtualMemorySize()) / (1024 * 1024);
         if (committedVirtualMemory == 0.00d) {
@@ -220,7 +246,7 @@ public final class Metrics {
         return committedVirtualMemory;
     }
 
-    private static double getFreePhysicalMemory() {
+    public  double getFreePhysicalMemory() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double freePhysicalMemory = (operatingSystemMXBean.getFreePhysicalMemorySize()) / (1024 * 1024);
         if (freePhysicalMemory == 0.00d) {
@@ -230,7 +256,7 @@ public final class Metrics {
     }
 
     //Get used physical memory percentage ASK ANNA
-    private double getUsedPhysicalMemory() {
+    public double getUsedPhysicalMemory() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double totalMemory = (operatingSystemMXBean.getTotalPhysicalMemorySize()) / (1024 * 1024);
         double freeMemory = (operatingSystemMXBean.getFreePhysicalMemorySize()) / (1024 * 1024);
@@ -240,7 +266,7 @@ public final class Metrics {
         return usedMemoryPercentage;
     }
 
-    private static double getTotalSwapSpaceSize() {
+    public double getTotalSwapSpaceSize() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double totalSwapSpaceSize = (operatingSystemMXBean.getTotalSwapSpaceSize()) / (1024 * 1024);
         if (totalSwapSpaceSize == 0.00d) {
@@ -250,7 +276,7 @@ public final class Metrics {
         return totalSwapSpaceSize;
     }
 
-    private static double getFreeSwapSize() {
+    public double getFreeSwapSize() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double freeSwapSize = (operatingSystemMXBean.getFreeSwapSpaceSize()) / (1024 * 1024);
         if (freeSwapSize == 0.00d) {
@@ -260,7 +286,7 @@ public final class Metrics {
         return freeSwapSize;
     }
 
-    private static double getUsedSwapPercentage() {
+    public  double getUsedSwapPercentage() {
         double totalSwapSize = (operatingSystemMXBean.getTotalSwapSpaceSize()) / (1024 * 1024);
         double freeSwapSize = (operatingSystemMXBean.getFreeSwapSpaceSize()) / (1024 * 1024);
         double usedSwapSize = totalSwapSize - freeSwapSize;
@@ -280,25 +306,25 @@ public final class Metrics {
         return systemDetails;
     }
 
-    private static int getRunningThreadCount() {
+    public int getRunningThreadCount() {
         threadMXBean = ManagementFactory.getPlatformMXBean(ThreadMXBean.class);
         int runningThread = threadMXBean.getThreadCount();
         return runningThread;
     }
 
-    private static long getTotalStartedThreadCount() {
+    public long getTotalStartedThreadCount() {
         threadMXBean = ManagementFactory.getPlatformMXBean(ThreadMXBean.class);
         long totalStartedThreadCount = threadMXBean.getTotalStartedThreadCount();
         return totalStartedThreadCount;
     }
 
-    private static int getPeakThreadCount() {
+    public  int getPeakThreadCount() {
         threadMXBean = ManagementFactory.getPlatformMXBean(ThreadMXBean.class);
         int peakThreadCount = threadMXBean.getPeakThreadCount();
         return peakThreadCount;
     }
 
-    private static int getDaemonThreadCount() {
+    public  int getDaemonThreadCount() {
         threadMXBean = ManagementFactory.getPlatformMXBean(ThreadMXBean.class);
         int daemonThreadCount = threadMXBean.getDaemonThreadCount();
         return daemonThreadCount;
@@ -360,33 +386,42 @@ public final class Metrics {
         return sigar.getFileSystemList();
     }
 
-    public DiskLevelMetrics getDiskIO() throws SigarException {
-
+    public List<List<DiskLevelMetrics >> getDiskIO() throws SigarException {
+        List< List<DiskLevelMetrics>> diskLevelMetricsMap = new ArrayList<>();
         FileSystem[] fs = getFileSystem();
-        DiskLevelMetrics diskLevelMetrics = new DiskLevelMetrics();
+
         for (FileSystem f : fs) {
 
             FileSystemUsage p = sigar.getFileSystemUsage(f.getDirName());
-
             if (p.getTotal() > 0) {
-                diskLevelMetrics.setDiskName(f.getDevName());
-                diskLevelMetrics.setNoOfReads(p.getDiskReads());
+                if(!(f.getDevName().equalsIgnoreCase("tmpfs") || f.getDevName().equalsIgnoreCase("udev")) ) {
+                    DiskLevelMetrics diskLevelMetrics = new DiskLevelMetrics();
+                    List<DiskLevelMetrics>test=new ArrayList<>();
+                    diskLevelMetrics.setDiskName(f.getDevName());
+                    diskLevelMetrics.setNoOfReads(p.getDiskReads());
+                    diskLevelMetrics.setDiskReadBytes(Math.round(p.getDiskReadBytes()));
+                    diskLevelMetrics.setNoOfWrites(p.getDiskWrites());
+                    diskLevelMetrics.setDiskWriteBytes(p.getDiskWriteBytes());
+                    diskLevelMetrics.setTotalSpace(1024 * p.getTotal());
+                    diskLevelMetrics.setUsedSpace(1024 * p.getUsed());
+                    diskLevelMetrics.setFreeSpace(1024 * p.getFree());
+                    diskLevelMetrics.setFileCount(p.getFiles());
+                    diskLevelMetrics.setUsedPercentage(p.getUsePercent()*100);
+                    test.add(diskLevelMetrics);
+                    diskLevelMetricsMap.add(test);
+                }
 
-                diskLevelMetrics.setDiskReadBytes(Math.round(p.getDiskReadBytes()));
-                diskLevelMetrics.setNoOfWrites(p.getDiskWrites());
-                diskLevelMetrics.setDiskWriteBytes(p.getDiskWriteBytes());
-                diskLevelMetrics.setTotalSpace(1024 * p.getTotal());
-                diskLevelMetrics.setUsedSpace(1024 * p.getUsed());
-                diskLevelMetrics.setFreeSpace(1024 * p.getFree());
-                diskLevelMetrics.setFileCount(p.getFiles());
 
                 // System.out.println("testing"+1024 * p.getFreeFiles());
             }
 
+
         }
 
+
+
        //LOGGER.info(diskLevelMetrics);
-        return diskLevelMetrics;
+        return diskLevelMetricsMap;
     }
 
 

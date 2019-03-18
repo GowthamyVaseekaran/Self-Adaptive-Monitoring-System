@@ -15,9 +15,4 @@ public class SelfAdaptiveMonitoringSystemApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SelfAdaptiveMonitoringSystemApplication.class, args);
 	}
-
-
-
-
-
 }

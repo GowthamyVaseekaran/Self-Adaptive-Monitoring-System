@@ -1,8 +1,11 @@
 package monitoring.core.bean;
 
+import org.springframework.stereotype.Component;
+
 /**
- * Bean class for thread level metrics.
+ * Bean class for thread level Metrics.
  */
+@Component
 public class ThreadLevelMetrics {
     private int runningThreadCount;
     private long totalThreadCount;

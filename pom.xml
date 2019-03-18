@@ -30,6 +30,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.boot</groupId>-->
+			<!--<artifactId>spring-boot-starter-data-jpa</artifactId>-->
+			<!--<version>2.1.1.RELEASE</version>-->
+		<!--</dependency>-->
+
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
@@ -41,9 +48,21 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
 		<!--<dependency>-->
-			<!--<groupId>performance-metrics</groupId>-->
-			<!--<artifactId>performance-metrics</artifactId>-->
+			<!--<groupId>org.springframework.data</groupId>-->
+			<!--<artifactId>spring-data-jpa</artifactId>-->
+			<!--<version>1.0.0.RELEASE</version>-->
+		<!--</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>performance-Metrics</groupId>-->
+			<!--<artifactId>performance-Metrics</artifactId>-->
 			<!--<version>1.0-SNAPSHOT</version>-->
 		<!--</dependency>-->
 		<dependency>
@@ -75,6 +94,11 @@
 			<artifactId>javacsv</artifactId>
 			<version>2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.47</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.hyperic/sigar -->
 		<!-- https://mvnrepository.com/artifact/org.hyperic/sigar -->
@@ -88,6 +112,19 @@
 			<artifactId>gson</artifactId>
 			<version>2.8.5</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.persistence/persistence-api -->
+		<!--<dependency>-->
+			<!--<groupId>javax.persistence</groupId>-->
+			<!--<artifactId>persistence-api</artifactId>-->
+			<!--<version>1.0</version>-->
+		<!--</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+			<version>1.2.4.RELEASE</version>
+		</dependency>
+
 
 	</dependencies>
 

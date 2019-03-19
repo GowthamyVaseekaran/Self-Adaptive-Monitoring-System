@@ -76,7 +76,7 @@ public class SOMPredictor implements MonitoringAsService {
         co_efficentCalculator = metricsDeserilization("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/trainWithMetrics.ser");
 
         // TODO: 3/13/19 COMMENTED
-        resetLowMetricsValues(systemStatus);
+        //resetLowMetricsValues(systemStatus);
 
         Metrics metricsAgent = new Metrics("17014");
 
@@ -110,18 +110,22 @@ public class SOMPredictor implements MonitoringAsService {
         healthDeterminer.setSystemCurrentStatus(current);
 
         systemStatus.setHealthDeterminer(healthDeterminer);
-
-        collectHighLevelMetrics(metricsAgent);
+        collectAllMetrics(systemStatus,metricsAgent);
+        // TODO: 3/20/19 UNCOMMENT IT
+       // collectHighLevelMetrics(metricsAgent);
 
         // TODO: 3/18/19 Commented for every metrics 
         if(current == 1) {
-            cpuMetricsSelection(metricsAgent,metrics);
+            // TODO: 3/20/19 UNCOMMENT IT
+           // cpuMetricsSelection(metricsAgent,metrics);
         }  else if (current == 2){
-            memoryMetricsSelection(metricsAgent,metrics);
+            // TODO: 3/20/19 UNCOMMENT IT
+           // memoryMetricsSelection(metricsAgent,metrics);
             //systemStatus.setSystemStatus(Constants.MEMORY_ANOMALY_TEXT);
         } else {
             normal++;
-            systemStatus.setSystemStatus(Constants.NORMAL_STATE_TEXT);
+            // TODO: 3/20/19 UNCOMMENT IT
+           // systemStatus.setSystemStatus(Constants.NORMAL_STATE_TEXT);
         }
 
 
@@ -159,103 +163,125 @@ public class SOMPredictor implements MonitoringAsService {
         // TODO: 3/12/19 DON'T DELETE - FOR TESTING
         //     collectAllMetrics(systemStatus,metricsAgent);
 
-//        try (FileWriter writer = new FileWriter("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/data.csv", true)) {
-//
-//            //System.out.println("trainWithMetrics" + som.neurons.mapLength);
-//            StringBuilder stringBuilder = new StringBuilder();
-//            stringBuilder.append(Metrics[0]);
-//            stringBuilder.append(",");
-//            stringBuilder.append(healthDeterminer.getMemoryUsage());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getCpuIdle());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getCpuNice());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getCpuUser());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getCpuWait());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getCommittedVirtualMemory());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getFreePhycialMemory());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getRamUsage());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getLoadAverage());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getTotalSwapSize());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getFreeSwapSize());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getSystemLevelMetrics().getUsedSwapPercentage());
-//            stringBuilder.append(",");
-//            for (List<DiskLevelMetrics> diskLevel: systemStatus.getDiskLevelMetrics()) {
-//                for (DiskLevelMetrics diskLevelMetrics:diskLevel) {
-//                    stringBuilder.append(diskLevelMetrics.getNoOfReads());
+        try (FileWriter writer = new FileWriter("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/data.csv", true)) {
+
+            //System.out.println("trainWithMetrics" + som.neurons.mapLength);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(metrics[0]);
+            stringBuilder.append(",");
+            stringBuilder.append(healthDeterminer.getMemoryUsage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getCpuIdle());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getCpuNice());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getCpuUser());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getCpuWait());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getCommittedVirtualMemory());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getFreePhycialMemory());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRamUsage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getLoadAverage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTotalSwapSize());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getFreeSwapSize());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getUsedSwapPercentage());
+            stringBuilder.append(",");
+            //for (List<DiskLevelMetrics> diskLevel: systemStatus.getDiskLevelMetrics()) {
+             //   for (DiskLevelMetrics diskLevelMetrics:diskLevel) {
+                    stringBuilder.append(systemStatus.getNoOfReads());
+                    stringBuilder.append(",");
+                    stringBuilder.append(systemStatus.getDiskReadBytes());
+                    stringBuilder.append(",");
+                    stringBuilder.append(systemStatus.getNoOfWrites());
+                    stringBuilder.append(",");
+                    stringBuilder.append(systemStatus.getDiskWriteBytes());
+                    stringBuilder.append(",");
+                    stringBuilder.append(systemStatus.getTotalSpace());
+                    stringBuilder.append(",");
+                    stringBuilder.append(systemStatus.getUsedSpace());
+                    stringBuilder.append(",");
+                    stringBuilder.append(systemStatus.getFreeSpace());
+                    stringBuilder.append(",");
+                    stringBuilder.append(systemStatus.getFileCount());
+                    stringBuilder.append(",");
+//                    stringBuilder.append(systemStatus.getUsedPercentage());
 //                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getDiskReadBytes());
-//                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getNoOfWrites());
-//                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getDiskWriteBytes());
-//                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getTotalSpace());
-//                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getUsedSpace());
-//                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getFreeSpace());
-//                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getFileCount());
-//                    stringBuilder.append(",");
-//                    stringBuilder.append(diskLevelMetrics.getUsedPercentage());
-//                    stringBuilder.append(",");
-//                }
-//
-//            }
-//
-//            stringBuilder.append(systemStatus.getThreadLevelMetrics().getTotalThreadCount());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getThreadLevelMetrics().getDaemonThreadCount());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getThreadLevelMetrics().getPeakThreadCount());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getThreadLevelMetrics().getRunningThreadCount());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getRxbytes());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getRxdropped());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getRxerrors());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getRxFrame());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getRxOverRuns());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getRxpackets());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getSpeed());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getTxbytes());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getTxcarrier());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getTxcollisions());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getTxdropped());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getTxerrors());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getRxOverRuns());
-//            stringBuilder.append(",");
-//            stringBuilder.append(systemStatus.getNetworkStats().getTxpackets());
-//
-//
-//            // stringBuilder.append(som.neurons[i][j].getState());
-//            stringBuilder.append("\n");
-//            writer.write(stringBuilder.toString());
-//        } catch (FileNotFoundException e) {
-//            System.out.println(e.getMessage());
-//        }
+              //  }
+
+           // }
+
+            stringBuilder.append(systemStatus.getTotalThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getDaemonThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getPeakThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRunningThreadCount());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRxbytes());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRxdropped());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRxerrors());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRxFrame());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRxOverRuns());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRxpackets());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getSpeed());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTxbytes());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTxcarrier());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTxcollisions());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTxdropped());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTxerrors());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getRxOverRuns());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTxpackets());
+
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getHeapInitUsage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getHeapCommitted());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getHeapUsed());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getHeapMax());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNonHeapInitUsage());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNonHeapCommitted());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNonHeapUsed());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getNonHeapMax());
+
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getCurrentlyLoadedClass());
+            stringBuilder.append(",");
+            stringBuilder.append(systemStatus.getTotalLoadedClass());
+
+
+            // stringBuilder.append(som.neurons[i][j].getState());
+            stringBuilder.append("\n");
+            writer.write(stringBuilder.toString());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
 
 
         //Heap dump will be performed when we identified more than five consecutive memory anomalies.
@@ -401,6 +427,22 @@ public class SOMPredictor implements MonitoringAsService {
         systemStatus.setRxbytes(rxBytes);
         String txBytes = metricsAgent.getIfstats().getTxbytes();
         systemStatus.setTxbytes(txBytes);
+
+        // TODO: 3/20/19 FOR TESTING
+        systemStatus.setHeapInitUsage(metricsAgent.getHeapInitMemoryUsage());
+        systemStatus.setHeapCommitted(metricsAgent.getHeapCommittedMemory());
+        systemStatus.setHeapUsed(metricsAgent.getUsedHeapMemory());
+        systemStatus.setHeapMax(metricsAgent.getMaxHeapMemory());
+
+        systemStatus.setNonHeapInitUsage(metricsAgent.getNonHeapInitMemory());
+        systemStatus.setNonHeapCommitted(metricsAgent.getNonHeapCommittedMemory());
+        systemStatus.setNonHeapUsed(metricsAgent.getNonUsedHeapMemory());
+        systemStatus.setNonHeapMax(metricsAgent.getNonMaxHeapMemory());
+
+        systemStatus.setCurrentlyLoadedClass(metricsAgent.currentlyLoadedClassCount());
+        systemStatus.setTotalLoadedClass(metricsAgent.totalLoadedClass());
+
+
         return system;
 
     }
@@ -763,6 +805,20 @@ public class SOMPredictor implements MonitoringAsService {
         systemStatus.setTxerrors(txErrors);
         systemStatus.setTxoverruns(txOverruns);
         systemStatus.setTxpackets(txPackets);
+
+        systemStatus.setHeapInitUsage(metricsAgent.getHeapInitMemoryUsage());
+        systemStatus.setHeapCommitted(metricsAgent.getHeapCommittedMemory());
+        systemStatus.setHeapUsed(metricsAgent.getUsedHeapMemory());
+        systemStatus.setHeapMax(metricsAgent.getMaxHeapMemory());
+
+        systemStatus.setNonHeapInitUsage(metricsAgent.getNonHeapInitMemory());
+        systemStatus.setNonHeapCommitted(metricsAgent.getNonHeapCommittedMemory());
+        systemStatus.setNonHeapUsed(metricsAgent.getNonUsedHeapMemory());
+        systemStatus.setNonHeapMax(metricsAgent.getNonMaxHeapMemory());
+
+        systemStatus.setCurrentlyLoadedClass(metricsAgent.currentlyLoadedClassCount());
+        systemStatus.setTotalLoadedClass(metricsAgent.totalLoadedClass());
+
 
 
     }

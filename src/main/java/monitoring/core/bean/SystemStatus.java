@@ -73,6 +73,19 @@ public class SystemStatus {
     private double freeSwapSize =0;
     private double usedSwapPercentage =0;
 
+    private double heapInitUsage;
+    private double heapCommitted;
+    private double heapUsed;
+    private double heapMax;
+    private double nonHeapInitUsage;
+    private double nonHeapCommitted;
+    private double nonHeapUsed;
+    private double nonHeapMax;
+
+    private double currentlyLoadedClass;
+    private double totalLoadedClass;
+
+
     public double getCpuUsage() {
         return cpuUsage;
     }
@@ -471,5 +484,85 @@ public class SystemStatus {
 
     public void setCurrentTime(String currentTime) {
         this.currentTime = currentTime;
+    }
+
+    public double getHeapInitUsage() {
+        return heapInitUsage;
+    }
+
+    public void setHeapInitUsage(double heapInitUsage) {
+        this.heapInitUsage = heapInitUsage;
+    }
+
+    public double getHeapCommitted() {
+        return heapCommitted;
+    }
+
+    public void setHeapCommitted(double heapCommitted) {
+        this.heapCommitted = heapCommitted;
+    }
+
+    public double getHeapUsed() {
+        return heapUsed;
+    }
+
+    public void setHeapUsed(double heapUsed) {
+        this.heapUsed = heapUsed;
+    }
+
+    public double getHeapMax() {
+        return heapMax;
+    }
+
+    public void setHeapMax(double heapMax) {
+        this.heapMax = heapMax;
+    }
+
+    public double getNonHeapInitUsage() {
+        return nonHeapInitUsage;
+    }
+
+    public void setNonHeapInitUsage(double nonHeapInitUsage) {
+        this.nonHeapInitUsage = nonHeapInitUsage;
+    }
+
+    public double getNonHeapCommitted() {
+        return nonHeapCommitted;
+    }
+
+    public void setNonHeapCommitted(double nonHeapCommitted) {
+        this.nonHeapCommitted = nonHeapCommitted;
+    }
+
+    public double getNonHeapUsed() {
+        return nonHeapUsed;
+    }
+
+    public void setNonHeapUsed(double nonHeapUsed) {
+        this.nonHeapUsed = nonHeapUsed;
+    }
+
+    public double getNonHeapMax() {
+        return nonHeapMax;
+    }
+
+    public void setNonHeapMax(double nonHeapMax) {
+        this.nonHeapMax = nonHeapMax;
+    }
+
+    public double getCurrentlyLoadedClass() {
+        return currentlyLoadedClass;
+    }
+
+    public void setCurrentlyLoadedClass(double currentlyLoadedClass) {
+        this.currentlyLoadedClass = currentlyLoadedClass;
+    }
+
+    public double getTotalLoadedClass() {
+        return totalLoadedClass;
+    }
+
+    public void setTotalLoadedClass(double totalLoadedClass) {
+        this.totalLoadedClass = totalLoadedClass;
     }
 }

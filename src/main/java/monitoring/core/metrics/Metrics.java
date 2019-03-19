@@ -10,7 +10,9 @@ import org.hyperic.sigar.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +41,9 @@ public final class Metrics {
     private final static org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(Metrics.class);
     private static MBeanServer mBeanServer;
     private static OperatingSystemMXBean operatingSystemMXBean;
+    private static MemoryMXBean memoryMXBean;
     private static ThreadMXBean threadMXBean;
+    private static ClassLoadingMXBean classLoadingMXBean;
     private static Sigar sigar = new Sigar();
 
 
@@ -234,6 +238,55 @@ public final class Metrics {
             return Double.NaN;
         }
         return totalMemory;
+    }
+
+    public double getHeapInitMemoryUsage() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getHeapMemoryUsage().getInit();
+    }
+
+    public double getHeapCommittedMemory() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getHeapMemoryUsage().getCommitted();
+    }
+
+    public double getUsedHeapMemory() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getHeapMemoryUsage().getUsed();
+    }
+
+    public double getMaxHeapMemory() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getHeapMemoryUsage().getMax();
+    }
+
+    public double getNonHeapInitMemory() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getNonHeapMemoryUsage().getInit();
+    }
+    public double getNonHeapCommittedMemory() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getNonHeapMemoryUsage().getCommitted();
+    }
+
+    public double getNonUsedHeapMemory() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getNonHeapMemoryUsage().getUsed();
+    }
+
+    public double getNonMaxHeapMemory() {
+        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        return memoryMXBean.getNonHeapMemoryUsage().getMax();
+    }
+
+    public double currentlyLoadedClassCount() {
+        classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+        return classLoadingMXBean.getLoadedClassCount();
+    }
+
+    public double totalLoadedClass() {
+        classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+        return classLoadingMXBean.getTotalLoadedClassCount();
     }
 
     public  double getCommittedVirtualMemorySize() {

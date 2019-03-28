@@ -232,7 +232,7 @@ public final class Metrics {
     //    Host memory size in in mega bytes.
     public  double getTotalPhysicalMemory() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double totalMemory = (operatingSystemMXBean.getTotalPhysicalMemorySize()) / (1024 * 1024);
+        double totalMemory = (operatingSystemMXBean.getTotalPhysicalMemorySize()) / (1024 * 1024 *1024);
         if (totalMemory == 0.00d) {
             LOGGER.error("Something went wrong please check");
             return Double.NaN;
@@ -242,36 +242,43 @@ public final class Metrics {
 
     public double getHeapInitMemoryUsage() {
         memoryMXBean=ManagementFactory.getMemoryMXBean();
-        return memoryMXBean.getHeapMemoryUsage().getInit();
+        double heapInit = (memoryMXBean.getHeapMemoryUsage().getInit())/(1024*1024);
+        return heapInit;
     }
 
     public double getHeapCommittedMemory() {
         memoryMXBean=ManagementFactory.getMemoryMXBean();
-        return memoryMXBean.getHeapMemoryUsage().getCommitted();
+        double heapCommitted = (memoryMXBean.getHeapMemoryUsage().getCommitted())/(1024*1024);
+        return heapCommitted;
     }
 
     public double getUsedHeapMemory() {
         memoryMXBean=ManagementFactory.getMemoryMXBean();
-        return memoryMXBean.getHeapMemoryUsage().getUsed();
+        double usedHeap= (memoryMXBean.getHeapMemoryUsage().getUsed())/(1024*1024);
+        return usedHeap ;
     }
 
     public double getMaxHeapMemory() {
         memoryMXBean=ManagementFactory.getMemoryMXBean();
-        return memoryMXBean.getHeapMemoryUsage().getMax();
+        double maxHeap = (memoryMXBean.getHeapMemoryUsage().getMax())/(1024*1024);
+        return maxHeap;
     }
 
     public double getNonHeapInitMemory() {
         memoryMXBean=ManagementFactory.getMemoryMXBean();
-        return memoryMXBean.getNonHeapMemoryUsage().getInit();
+        double nonHeapInit = (memoryMXBean.getNonHeapMemoryUsage().getInit())/(1024*1024);
+        return nonHeapInit;
     }
     public double getNonHeapCommittedMemory() {
         memoryMXBean=ManagementFactory.getMemoryMXBean();
-        return memoryMXBean.getNonHeapMemoryUsage().getCommitted();
+        double nonHeapCommitted = (memoryMXBean.getNonHeapMemoryUsage().getCommitted())/(1024*1024);
+        return nonHeapCommitted;
     }
 
     public double getNonUsedHeapMemory() {
         memoryMXBean=ManagementFactory.getMemoryMXBean();
-        return memoryMXBean.getNonHeapMemoryUsage().getUsed();
+        double nonHeapUsed = (memoryMXBean.getNonHeapMemoryUsage().getUsed())/(1024*1024);
+        return nonHeapUsed;
     }
 
     public double getNonMaxHeapMemory() {
@@ -291,7 +298,7 @@ public final class Metrics {
 
     public  double getCommittedVirtualMemorySize() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double committedVirtualMemory = (operatingSystemMXBean.getCommittedVirtualMemorySize()) / (1024 * 1024);
+        double committedVirtualMemory = (operatingSystemMXBean.getCommittedVirtualMemorySize()) / (1024 * 1024 * 1024 );
         if (committedVirtualMemory == 0.00d) {
             LOGGER.error("Something went wrong please check");
             return Double.NaN;
@@ -301,7 +308,7 @@ public final class Metrics {
 
     public  double getFreePhysicalMemory() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double freePhysicalMemory = (operatingSystemMXBean.getFreePhysicalMemorySize()) / (1024 * 1024);
+        double freePhysicalMemory = (operatingSystemMXBean.getFreePhysicalMemorySize()) / (1024 * 1024 );
         if (freePhysicalMemory == 0.00d) {
             LOGGER.error("Memory out of bound");
         }
@@ -309,13 +316,9 @@ public final class Metrics {
     }
 
     //Get used physical memory percentage ASK ANNA
-    public double getUsedPhysicalMemory() {
+    public double getUsedPhysicalMemory() throws SigarException {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double totalMemory = (operatingSystemMXBean.getTotalPhysicalMemorySize()) / (1024 * 1024);
-        double freeMemory = (operatingSystemMXBean.getFreePhysicalMemorySize()) / (1024 * 1024);
-        double usedMemory = (totalMemory - freeMemory);
-        double usedMemoryPercentage = Double.parseDouble(
-                String.format(Constants.TWO_DECIMAL, (usedMemory / totalMemory) * 100));
+        double usedMemoryPercentage = sigar.getMem().getUsedPercent();
         return usedMemoryPercentage;
     }
 
@@ -355,6 +358,11 @@ public final class Metrics {
         systemDetails.setOsName(System.getProperty(Constants.SYSTEM_PROPERTY_TO_GET_OS_NAME));
         systemDetails.setOsArchitecture(System.getProperty(Constants.OS_ARCHITECTURE));
         systemDetails.setOsVersion(System.getProperty(Constants.OS_VERSION));
+        systemDetails.setJavaHome(System.getProperty(Constants.JAVA_HOME_DIRECTORY));
+        systemDetails.setJavaRunTimeName(System.getProperty(Constants.JAVA_RUNTIME_NAME));
+        systemDetails.setRepoLocation(System.getProperty(Constants.REPO_LOCATION));
+        systemDetails.setUserName(System.getProperty(Constants.USERNAME));
+        systemDetails.setUserHome(System.getProperty(Constants.USER_HOME));
         systemDetails.setNoOfCores(Long.parseLong(String.valueOf(Runtime.getRuntime().availableProcessors())));
         return systemDetails;
     }
@@ -455,9 +463,9 @@ public final class Metrics {
                     diskLevelMetrics.setDiskReadBytes(Math.round(p.getDiskReadBytes()));
                     diskLevelMetrics.setNoOfWrites(p.getDiskWrites());
                     diskLevelMetrics.setDiskWriteBytes(p.getDiskWriteBytes());
-                    diskLevelMetrics.setTotalSpace(1024 * p.getTotal());
-                    diskLevelMetrics.setUsedSpace(1024 * p.getUsed());
-                    diskLevelMetrics.setFreeSpace(1024 * p.getFree());
+                    diskLevelMetrics.setTotalSpace( (p.getTotal())/(1024*1024));
+                    diskLevelMetrics.setUsedSpace((p.getUsed())/(1024*1024));
+                    diskLevelMetrics.setFreeSpace( (p.getFree())/(1024*1024));
                     diskLevelMetrics.setFileCount(p.getFiles());
                     diskLevelMetrics.setUsedPercentage(p.getUsePercent()*100);
                     test.add(diskLevelMetrics);

@@ -40,4 +40,16 @@ public class Constants {
     public static final String TX_ERRORS = "TX-Errors";
     public static final String TX_OVERRUNS = "TX-Overruns";
     public static final String TX_PACKETS = "TX-Packets";
+
+    public static final String HEAP_INIT_USAGE= "Heap-InitUsage";
+    public static final String HEAP_COMMITTED="Heap-Committed";
+    public static final String HEAP_USED="Heap-Used";
+    public static final String HEAP_MAX="Heap-Max";
+    public static final String NON_HEAP_INIT="NonHeap-InitUsage";
+    public static final String NON_HEAP_COMMITTED="NonHeap-Committed";
+    public static final String NON_HEAP_USED="NonHeap-Used";
+    public static final String NON_HEAP_MAX="NonHeap-Max";
+
+    public static final String CURRENTLY_LOADED_CLASS="Currently-Loaded-Class";
+    public static final String TOTAL_LOADED_CLASS="Total-Loaded-Class";
 }

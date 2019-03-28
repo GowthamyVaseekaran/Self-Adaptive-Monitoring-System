@@ -13,6 +13,11 @@ public class Constants {
     public static final String JAVA_VERSION = "java.version";
     public static final String OS_ARCHITECTURE = "os.arch";
     public static final String OS_VERSION = "os.version";
+    public static final String JAVA_RUNTIME_NAME ="java.vm.name";
+    public static final String JAVA_HOME_DIRECTORY = "java.home";
+    public static final String REPO_LOCATION = "user.dir";
+    public static final String USERNAME ="user.name ";
+    public static final String USER_HOME = "user.home";
     public static final String IGNORE_COMMAND_TAG = "%CPU %MEM";
     public static final String LINUX_OS = "linux";
     public static final String OPERATING_SYSTEM = "java.lang:type=OperatingSystem";

@@ -54,6 +54,21 @@ public class Co_EfficentCalculator implements Serializable {
     private static Instance tx_overrunsInstance =new SparseInstance(countNoOfLines());
     private static Instance tx_packetsInstance = new SparseInstance(countNoOfLines());
 
+
+
+
+    private static Instance heapInitUsageInstance =new SparseInstance(countNoOfLines());
+    private static Instance heapCommittedInstance = new SparseInstance(countNoOfLines());
+    private static Instance heapUsedinstance = new SparseInstance(countNoOfLines());
+    private static Instance heapMaxInstance =new SparseInstance(countNoOfLines());
+    private static Instance nonHeapInitUsageInstance =new SparseInstance(countNoOfLines());
+    private static Instance nonHeapCommittedInstance =new SparseInstance(countNoOfLines());
+    private static Instance nonHeapUsedInstance =new SparseInstance(countNoOfLines());
+    private static Instance nonHeapMaxInstance =new SparseInstance(countNoOfLines());
+    private static Instance currentlyLoadedClassInstance = new SparseInstance(countNoOfLines());
+    private static Instance totalLoadedClassInstance = new SparseInstance(countNoOfLines());
+
+
     private static Map<String, Instance> totalInstances = new HashMap<>();
     private static void readCSV() throws IOException {
         CsvReader metrics = new CsvReader("/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/data.csv");
@@ -100,6 +115,19 @@ public class Co_EfficentCalculator implements Serializable {
             double tx_overruns = Double.parseDouble(metrics.get(Constants.TX_OVERRUNS));
             double tx_packets = Double.parseDouble(metrics.get(Constants.TX_PACKETS));
 
+
+             double heapInitUsage= Double.parseDouble(metrics.get(Constants.HEAP_INIT_USAGE));
+             double heapCommitted= Double.parseDouble(metrics.get(Constants.HEAP_COMMITTED));
+             double heapUsed= Double.parseDouble(metrics.get(Constants.HEAP_USED));
+             double heapMax= Double.parseDouble(metrics.get(Constants.HEAP_MAX));
+             double nonHeapInitUsage= Double.parseDouble(metrics.get(Constants.NON_HEAP_INIT));
+             double nonHeapCommitted= Double.parseDouble(metrics.get(Constants.NON_HEAP_COMMITTED));
+             double nonHeapUsed= Double.parseDouble(metrics.get(Constants.NON_HEAP_USED));
+             double nonHeapMax= Double.parseDouble(metrics.get(Constants.NON_HEAP_MAX));
+
+             double currentlyLoadedClass= Double.parseDouble(metrics.get(Constants.CURRENTLY_LOADED_CLASS));
+             double totalLoadedClass= Double.parseDouble(metrics.get(Constants.TOTAL_LOADED_CLASS));
+
             cpuInstance.put(lineNo,cpu);
             memInstance.put(lineNo, memory);
             cpuIdleInstance.put(lineNo,cpuIdle);
@@ -140,6 +168,24 @@ public class Co_EfficentCalculator implements Serializable {
             tx_errorInstance.put(lineNo,tx_errors);
             tx_overrunsInstance.put(lineNo,tx_overruns);
             tx_packetsInstance.put(lineNo,tx_packets);
+
+            heapInitUsageInstance.put(lineNo,heapInitUsage);
+            heapCommittedInstance.put(lineNo,heapCommitted);
+            heapUsedinstance.put(lineNo,heapUsed);
+            heapMaxInstance.put(lineNo,heapMax);
+            nonHeapInitUsageInstance.put(lineNo,nonHeapInitUsage);
+            nonHeapCommittedInstance.put(lineNo,nonHeapCommitted);
+            nonHeapUsedInstance.put(lineNo,nonHeapUsed);
+            nonHeapMaxInstance.put(lineNo,nonHeapMax);
+            currentlyLoadedClassInstance.put(lineNo,currentlyLoadedClass);
+            totalLoadedClassInstance.put(lineNo,totalLoadedClass);
+
+
+
+
+
+
+
 
           //  ParseValueToInstanceObj(lineNo, cpu, memory, committedVM, freePhysicalMem, freeSwap, loadAvg, totalSwap, usedSwap, noOfRead, readRequest, noOfWrite, writeRequest, totalDiskSpace, usedDiskSpace, freeDiskSpace, fileCount, totalThreadCount, cpuInstance, memInstance, committedVMInstnce, freePhysicalMemInstance, freeSwapMemInstance, loadAvgInstance, totalSwapInstance, usedSwapInstance, npOfReadsInstance, noOfReadRequestInstance, noOfWriteInstance, noOfWriteRequestInstance, totalDiskSpaceInstance, usedDiskSpaceInstance, freeDiskSpaceInstance, fileCountInstance, totalThreadCountInstance);
             //ParseValueToInstanceObj(lineNo, daemonThreadCount, peakThreadCount, runningThreadCount, rx_bytes, rx_dropped, rx_error, rx_frames, rx_overruns, rx_packets, speed, tx_bytes, tx_carrier, tx_collision, tx_dropped, tx_errors, tx_overruns, tx_packets, daemonThreadCountInstance, peakThreadCountInstance, runningThreadCountInstance, rx_bytesInstance, rx_droppedInstance, rx_errorInstance, rx_framesInstance, rx_overrunsnstance, rx_packetsInstance, speenInstance, tx_bytesInstance, tx_carrierInstance, tx_collisionsInstance, tx_droppedInstance, tx_errorInstance, tx_overrunsInstance, tx_packetsInstance);
@@ -185,6 +231,19 @@ public class Co_EfficentCalculator implements Serializable {
         totalInstances.put(Constants.TX_ERRORS, tx_errorInstance);
         totalInstances.put(Constants.TX_OVERRUNS, tx_overrunsInstance);
         totalInstances.put(Constants.TX_PACKETS, tx_packetsInstance);
+
+
+        totalInstances.put(Constants.HEAP_INIT_USAGE, heapInitUsageInstance);
+        totalInstances.put(Constants.HEAP_COMMITTED, heapCommittedInstance);
+        totalInstances.put(Constants.HEAP_USED, heapUsedinstance);
+        totalInstances.put(Constants.HEAP_MAX, heapMaxInstance);
+        totalInstances.put(Constants.NON_HEAP_INIT, nonHeapInitUsageInstance);
+        totalInstances.put(Constants.NON_HEAP_COMMITTED,nonHeapCommittedInstance);
+        totalInstances.put(Constants.NON_HEAP_USED,nonHeapUsedInstance);
+        totalInstances.put(Constants.NON_HEAP_MAX, nonHeapMaxInstance);
+        totalInstances.put(Constants.CURRENTLY_LOADED_CLASS, currentlyLoadedClassInstance);
+        totalInstances.put(Constants.TOTAL_LOADED_CLASS, totalLoadedClassInstance);
+
 
     }
 

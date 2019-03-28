@@ -38,7 +38,7 @@ public class SOM implements Serializable {
     private static final int TIMES_TO_TRAIN_WITH_INPUT = 3;
 
     // threshold percentile default 80
-    private static final int PERCENTILE = 85;
+    private static final int PERCENTILE = 80;
 
     public SOM() {
         initialize();

@@ -1,13 +1,12 @@
 package monitoring.core.configuration;
 
-import monitoring.core.Entities.DBConfiguration.MetricInfoDao;
-import monitoring.core.Entities.DBConfiguration.TestRepository;
-import monitoring.core.som.WeightVector;
+import monitoring.core.entities.dbConfiguration.MetricInfoDao;
+import monitoring.core.entities.dbConfiguration.Metrics;
+import monitoring.core.entities.dbConfiguration.TestRepository;
+import monitoring.core.planner.som.WeightVector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -97,7 +96,7 @@ public class FileParser {
         return vectors;
     }
 
-    private MetricInfoDao transform(monitoring.core.Entities.DBConfiguration.Metrics metircsInfoEntity)
+    private MetricInfoDao transform(Metrics metircsInfoEntity)
     {
         MetricInfoDao metricInfoDao = new MetricInfoDao();
         metricInfoDao.setCpu(metircsInfoEntity.getCpu());
@@ -107,8 +106,8 @@ public class FileParser {
 
     public List<MetricInfoDao> findAllCpuInfo() {
         List<MetricInfoDao> returnList = new ArrayList<>();
-        List<monitoring.core.Entities.DBConfiguration.Metrics> allCpuInfo = testRepository.findAll();
-        for (monitoring.core.Entities.DBConfiguration.Metrics cpu : allCpuInfo)
+        List<Metrics> allCpuInfo = testRepository.findAll();
+        for (Metrics cpu : allCpuInfo)
         {
             returnList.add(transform(cpu));
 
@@ -129,8 +128,8 @@ public class FileParser {
 
 
 //        List<MetricInfoDao> returnList = new ArrayList<>();
-//        List<monitoring.core.Entities.DBConfiguration.Metrics> allCpuInfo = testRepository.findAll();
-//        for (monitoring.core.Entities.DBConfiguration.Metrics cpu : allCpuInfo)
+//        List<Metrics> allCpuInfo = testRepository.findAll();
+//        for (Metrics cpu : allCpuInfo)
 //        {
 //            returnList.add(transform(cpu));
 //
@@ -138,17 +137,17 @@ public class FileParser {
         findAllCpuInfo();
 
 //        for (MetricInfoDao test: findAllCpuInfo()) {
-//            double[] metrics = new double[2];
+//            double[] monitor = new double[2];
 //            // read CPU metric change to 6 *100
-//            metrics[0] = (Math.round((Double.parseDouble(test.getCpu()))));
+//            monitor[0] = (Math.round((Double.parseDouble(test.getCpu()))));
 //            double totMem = (Double.parseDouble(test.getMemory()));
 //
 //            // normalize mem metric
-//            metrics[1] = Math.round(totMem);
+//            monitor[1] = Math.round(totMem);
 //
 //           // logger.info("cpu"+test.getCpu());
 //           // logger.info("memory"+test.getMemory());
-//            vectors.add(new WeightVector(metrics));
+//            vectors.add(new WeightVector(monitor));
 //        }
         return vectors;
 
@@ -169,9 +168,9 @@ public class FileParser {
 //                }
 //            }
 //
-//            double[] metrics = new double[2];
+//            double[] monitor = new double[2];
 //            // read CPU metric change to 6 *100
-//            metrics[0] = (Math.round((Double.parseDouble(data.get(6)) * 100)));
+//            monitor[0] = (Math.round((Double.parseDouble(data.get(6)) * 100)));
 //
 //            // j=0;
 //            // while(j<2 && memScanner.hasNextLine()) {
@@ -189,13 +188,13 @@ public class FileParser {
 //            double totMem = (Double.parseDouble(data.get(1)) * 100);
 //
 //            // normalize mem metric
-//            metrics[1] = Math.round(totMem);
+//            monitor[1] = Math.round(totMem);
 ////            j=0;
 ////            while(j<2 && memScanner.hasNextLine()) {
 ////                line = memScanner.nextLine();
 ////                j++;
 ////            }
-//            vectors.add(new WeightVector(metrics));
+//            vectors.add(new WeightVector(monitor));
 //            i++;
 //        }
 //        return vectors;

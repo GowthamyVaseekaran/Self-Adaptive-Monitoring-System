@@ -1,6 +1,6 @@
 package monitoring.core.utils.visulaizer;
 
-import monitoring.core.som.SOM;
+import monitoring.core.planner.som.SOM;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,9 +12,10 @@ import javax.swing.WindowConstants;
  */
 public class Visualizer extends JFrame {
     private static final long SERIALVERSIONUID = 0L;
+    // TODO: 3/30/19 Changed to private
 
-    public static final int FRAME_WIDTH = 900;
-    public static final int FRAME_HEIGHT = 900;
+    private static final int FRAME_WIDTH = 900;
+    private static final int FRAME_HEIGHT = 900;
 
     private SOM selfOrganizingMap = null;
     private int noOfNeuronCount = 0;

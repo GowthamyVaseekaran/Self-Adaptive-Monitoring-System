@@ -1,26 +1,21 @@
-//package monitoring.core.email;
-//
-//import java.util.Properties;
-//
-//import javax.mail.Session;
-//
-//public class Email {
-//
-////    public static void main(String[] args) {
-////
-////        System.out.println("SimpleEmail Start");
-////
-////        String smtpHostServer = "gmail-smtp-in.l.google.com";
-////        String emailID = "vaseekarangowthamy@gmail.com";
-////
-////        Properties props = System.getProperties();
-////
-////        props.put("mail.smtp.host", smtpHostServer);
-////        props.put("mail.smtp.port", "587");
-////
-////        Session session = Session.getInstance(props, null);
-////
-////        EmailUtil.sendEmail(session, emailID,"SimpleEmail Testing Subject", "SimpleEmail Testing Body");
-////    }
-//
-//}
+package monitoring.core.email;
+//package com.mkyong.common;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Email
+{
+    public static void main( String[] args )
+    {
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext("Spring-Mail.xml");
+
+        EmailSender mm = (EmailSender) context.getBean("emailUtil");
+        mm.sendMail("adaptivemonitoringsystem@gmail.com",
+                "vaseekarangowthamy@gmail.com",
+                "System Alert",
+                "Testing only \n\n Hello Spring Email Sender");
+
+    }
+}

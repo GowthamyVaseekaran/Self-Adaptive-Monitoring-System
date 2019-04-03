@@ -1,8 +1,8 @@
 package monitoring.core.controller;
 
-import monitoring.core.Entities.DBConfiguration.MetricInfoDao;
-import monitoring.core.prediction.impl.MonitoringAsService;
-import monitoring.core.prediction.impl.SOMPredictor;
+import monitoring.core.entities.dbConfiguration.MetricInfoDao;
+import monitoring.core.executor.impl.MonitoringAsService;
+import monitoring.core.executor.impl.MainExecutorService;
 import org.hyperic.sigar.SigarException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,12 +27,12 @@ import javax.management.ReflectionException;
 @RequestMapping("/api/system")
 public class SelfAdaptiveMonitoringController {
     private final MonitoringAsService service;
-    private final SOMPredictor somPredictor;
+    private final MainExecutorService mainExecutorService;
     @Autowired
-    public SelfAdaptiveMonitoringController(MonitoringAsService service, SOMPredictor somPredictor) {
+    public SelfAdaptiveMonitoringController(MonitoringAsService service, MainExecutorService mainExecutorService) {
         this.service = service;
 
-        this.somPredictor = somPredictor;
+        this.mainExecutorService = mainExecutorService;
     }
 
     @Scheduled(fixedRate = 5000)
@@ -51,6 +51,6 @@ public class SelfAdaptiveMonitoringController {
     @GetMapping("/baselines")
     public List<MetricInfoDao> listBaselines() {
 
-        return somPredictor.findAllCpuInfo();
+        return mainExecutorService.findAllCpuInfo();
     }
 }

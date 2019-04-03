@@ -1,0 +1,5 @@
+user:
+  - email: "vaseekarangowthamy@gmail.com"
+trainedObj:
+  - SOMFile: "/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/trainedSOM.ser"
+  - MetricsFile: "/home/thamy/Pictures/Self-Adaptive-Monitoring-System/HistoryData/metricsRelationShip.ser"

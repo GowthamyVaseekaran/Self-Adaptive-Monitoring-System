@@ -1,8 +1,8 @@
 package monitoring.core.controller;
 
 import monitoring.core.entities.dbConfiguration.MetricInfoDao;
-import monitoring.core.executor.impl.MonitoringAsService;
 import monitoring.core.executor.impl.MainExecutorService;
+import monitoring.core.executor.impl.MonitoringAsService;
 import org.hyperic.sigar.SigarException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,7 +21,7 @@ import javax.management.ReflectionException;
 /**
  * Controller class.
  */
-@CrossOrigin(origins ="http://localhost:3000", maxAge = 4800, allowCredentials = "false")
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 4800, allowCredentials = "false")
 //@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api/system")

@@ -1,7 +1,5 @@
 package monitoring.core.bean;
 
-import java.util.List;
-
 /**
  * Bean class for Metrics.
  */
@@ -9,15 +7,6 @@ public class HealthDeterminer {
     private double cpuUsage;
     private double memoryUsage;
     private int systemCurrentStatus;
-
-//    public double getCpuUsage() {
-//        return cpuUsage;
-//    }
-//
-//    public void setCpuUsage(double cpuUsage) {
-//        this.cpuUsage = cpuUsage;
-//    }
-
 
     public double getCpuUsage() {
         return cpuUsage;

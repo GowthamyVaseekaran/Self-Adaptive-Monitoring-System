@@ -1,26 +1,20 @@
 package monitoring.core.bean;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Collection;
+import java.util.Map;
+
 /**
- * The {@code X} Class used to define contains.
+ * The {@code IFStats} Class used to define contains.
  *
  * @author joe
  *
  */
-public final class X {
+public final class IFStats {
 
-    private static Log log = LogFactory.getLog(X.class);
+    private static Log log = LogFactory.getLog(IFStats.class);
 
     /** The Constant 60*1000. */
     public static final long AMINUTE = 1000 * 60;
@@ -81,9 +75,9 @@ public final class X {
 
     public static final int ITEMS_PER_PAGE = 10;
 
-    public static X inst = new X();
+    public static IFStats inst = new IFStats();
 
-    private X() {
+    private IFStats() {
     }
 
     /**
@@ -98,7 +92,7 @@ public final class X {
     public static boolean isSame(Object s1, Object s2) {
         if (s1 == s2)
             return true;
-        if (X.isEmpty(s1) && X.isEmpty(s2))
+        if (IFStats.isEmpty(s1) && IFStats.isEmpty(s2))
             return true;
 
         if (s1 instanceof String && s2 instanceof String) {
@@ -132,7 +126,7 @@ public final class X {
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
 
-                c = X.getNumber(c);
+                c = IFStats.getNumber(c);
                 if (c >= '0' && c <= '9') {
                     sb.append(c);
                 } else if (c == '-' && sb.length() == 0) {
@@ -161,7 +155,7 @@ public final class X {
      * @return int
      */
     public static int toInt(Object v) {
-        return X.toInt(v, 0);
+        return IFStats.toInt(v, 0);
     }
 
     /**
@@ -182,7 +176,7 @@ public final class X {
             String s = v.toString().replaceAll(",", "").trim();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < s.length(); i++) {
-                char c = X.getNumber(s.charAt(i));
+                char c = IFStats.getNumber(s.charAt(i));
                 if (c >= '0' && c <= '9') {
                     sb.append(c);
                 } else if (c == '-' && sb.length() == 0) {
@@ -218,7 +212,7 @@ public final class X {
             return true;
         }
         if (s instanceof String) {
-            return X.EMPTY.equals(s);
+            return IFStats.EMPTY.equals(s);
         } else if (s instanceof Collection) {
             return ((Collection) s).isEmpty();
         } else if (s instanceof Map) {
@@ -257,7 +251,7 @@ public final class X {
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < s.length(); i++) {
-                char c = X.getNumber(s.charAt(i));
+                char c = IFStats.getNumber(s.charAt(i));
                 if (c >= '0' && c <= '9') {
                     sb.append(c);
                 } else if (c == '-' && sb.length() == 0) {
@@ -365,10 +359,4 @@ public final class X {
         }
         return defaultValue;
     }
-
-
-
-
-
-
 }

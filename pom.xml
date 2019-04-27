@@ -124,6 +124,12 @@
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 			<version>1.2.4.RELEASE</version>
 		</dependency>
+		<!-- Java Mail API -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.3</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
 		<!--<dependency>-->
@@ -137,6 +143,22 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.5</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>3.2.0.RELEASE</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.24</version>
+		</dependency>
+
+
+
+
 
 
 

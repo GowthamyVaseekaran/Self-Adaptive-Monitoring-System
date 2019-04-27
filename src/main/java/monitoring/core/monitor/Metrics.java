@@ -3,17 +3,31 @@ package monitoring.core.monitor;
 import com.google.gson.Gson;
 import com.sun.management.OperatingSystemMXBean;
 
-import monitoring.core.bean.*;
+import monitoring.core.bean.DiskLevelMetrics;
+import monitoring.core.bean.IFStats;
+import monitoring.core.bean.NetworkStats;
+import monitoring.core.bean.ProcessLevelMetrics;
+import monitoring.core.bean.SystemDetails;
+import monitoring.core.bean.SystemLevelMetrics;
+import monitoring.core.bean.ThreadLevelMetrics;
 import monitoring.core.monitor.utils.Constants;
-import org.hyperic.sigar.*;
+
+import org.hyperic.sigar.FileSystem;
+import org.hyperic.sigar.FileSystemUsage;
+import org.hyperic.sigar.NetInterfaceConfig;
+import org.hyperic.sigar.NetInterfaceStat;
+import org.hyperic.sigar.Sigar;
+import org.hyperic.sigar.SigarException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.ThreadMXBean;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,23 +80,11 @@ public final class Metrics {
     }
 
 
-    public SystemLevelMetrics getSystemLevelMetrics() throws MalformedObjectNameException, InstanceNotFoundException, ReflectionException, SigarException {
+    public SystemLevelMetrics getSystemLevelMetrics() throws MalformedObjectNameException,
+            InstanceNotFoundException, ReflectionException, SigarException {
         SystemLevelMetrics systemLevelMetrics = new SystemLevelMetrics();
         systemLevelMetrics.setCpuUsage(getSystemCpuUsage());
         systemLevelMetrics.setUsedMemoryPercentage(getUsedPhysicalMemory());
-        // TODO: 3/13/19 COMMENT IT 
-//        systemLevelMetrics.setLoadAverage(getSystemLoadAverage());
-//        systemLevelMetrics.setTotalPhysicalMemory(getTotalPhysicalMemory());
-//        systemLevelMetrics.setCommittedVirtualMemory(getCommittedVirtualMemorySize());
-//        systemLevelMetrics.setFreePhycialMemory(getFreePhysicalMemory());
-//        systemLevelMetrics.setTotalSwapSize(getTotalSwapSpaceSize());
-//        systemLevelMetrics.setFreeSwapSize(getFreeSwapSize());
-//        systemLevelMetrics.setUsedSwapPercentage(getUsedSwapPercentage());
-//        systemLevelMetrics.setCpuIdle(getCPUIdle());
-//        systemLevelMetrics.setCpuNice(getCPUNice());
-//        systemLevelMetrics.setCpuUser(getCPUUser());
-//        systemLevelMetrics.setCpuWait(getCPUWait());
-//        systemLevelMetrics.setRamUsage( getRAMUsage());
         return systemLevelMetrics;
     }
 
@@ -230,7 +232,7 @@ public final class Metrics {
     //    Host memory size in in mega bytes.
     public  double getTotalPhysicalMemory() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double totalMemory = (operatingSystemMXBean.getTotalPhysicalMemorySize()) / (1024 * 1024 *1024);
+        double totalMemory = (operatingSystemMXBean.getTotalPhysicalMemorySize()) / (1024 * 1024 * 1024);
         if (totalMemory == 0.00d) {
             LOGGER.error("Something went wrong please check");
             return Double.NaN;
@@ -239,48 +241,48 @@ public final class Metrics {
     }
 
     public double getHeapInitMemoryUsage() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
-        double heapInit = (memoryMXBean.getHeapMemoryUsage().getInit())/(1024*1024);
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+        double heapInit = (memoryMXBean.getHeapMemoryUsage().getInit()) / (1024 * 1024);
         return heapInit;
     }
 
     public double getHeapCommittedMemory() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
-        double heapCommitted = (memoryMXBean.getHeapMemoryUsage().getCommitted())/(1024*1024);
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+        double heapCommitted = (memoryMXBean.getHeapMemoryUsage().getCommitted()) / (1024 * 1024);
         return heapCommitted;
     }
 
     public double getUsedHeapMemory() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
-        double usedHeap= (memoryMXBean.getHeapMemoryUsage().getUsed())/(1024*1024);
-        return usedHeap ;
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+        double usedHeap = (memoryMXBean.getHeapMemoryUsage().getUsed()) / (1024 * 1024);
+        return usedHeap;
     }
 
     public double getMaxHeapMemory() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
-        double maxHeap = (memoryMXBean.getHeapMemoryUsage().getMax())/(1024*1024);
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+        double maxHeap = (memoryMXBean.getHeapMemoryUsage().getMax()) / (1024 * 1024);
         return maxHeap;
     }
 
     public double getNonHeapInitMemory() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
-        double nonHeapInit = (memoryMXBean.getNonHeapMemoryUsage().getInit())/(1024*1024);
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+        double nonHeapInit = (memoryMXBean.getNonHeapMemoryUsage().getInit()) / (1024 * 1024);
         return nonHeapInit;
     }
     public double getNonHeapCommittedMemory() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
-        double nonHeapCommitted = (memoryMXBean.getNonHeapMemoryUsage().getCommitted())/(1024*1024);
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+        double nonHeapCommitted = (memoryMXBean.getNonHeapMemoryUsage().getCommitted()) / (1024 * 1024);
         return nonHeapCommitted;
     }
 
     public double getNonUsedHeapMemory() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
-        double nonHeapUsed = (memoryMXBean.getNonHeapMemoryUsage().getUsed())/(1024*1024);
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+        double nonHeapUsed = (memoryMXBean.getNonHeapMemoryUsage().getUsed()) / (1024 * 1024);
         return nonHeapUsed;
     }
 
     public double getNonMaxHeapMemory() {
-        memoryMXBean=ManagementFactory.getMemoryMXBean();
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
         return memoryMXBean.getNonHeapMemoryUsage().getMax();
     }
 
@@ -296,7 +298,7 @@ public final class Metrics {
 
     public  double getCommittedVirtualMemorySize() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double committedVirtualMemory = (operatingSystemMXBean.getCommittedVirtualMemorySize()) / (1024 * 1024 * 1024 );
+        double committedVirtualMemory = (operatingSystemMXBean.getCommittedVirtualMemorySize()) / (1024 * 1024 * 1024);
         if (committedVirtualMemory == 0.00d) {
             LOGGER.error("Something went wrong please check");
             return Double.NaN;
@@ -306,7 +308,7 @@ public final class Metrics {
 
     public  double getFreePhysicalMemory() {
         operatingSystemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double freePhysicalMemory = (operatingSystemMXBean.getFreePhysicalMemorySize()) / (1024 * 1024 );
+        double freePhysicalMemory = (operatingSystemMXBean.getFreePhysicalMemorySize()) / (1024 * 1024);
         if (freePhysicalMemory == 0.00d) {
             LOGGER.error("Memory out of bound");
         }
@@ -445,33 +447,30 @@ public final class Metrics {
         return sigar.getFileSystemList();
     }
 
-    public List<List<DiskLevelMetrics >> getDiskIO() throws SigarException {
-        List< List<DiskLevelMetrics>> diskLevelMetricsMap = new ArrayList<>();
+    public List<List<DiskLevelMetrics>> getDiskIO() throws SigarException {
+        List<List<DiskLevelMetrics>> diskLevelMetricsMap = new ArrayList<>();
         FileSystem[] fs = getFileSystem();
 
         for (FileSystem f : fs) {
 
             FileSystemUsage p = sigar.getFileSystemUsage(f.getDirName());
             if (p.getTotal() > 0) {
-                if(!(f.getDevName().equalsIgnoreCase("tmpfs") || f.getDevName().equalsIgnoreCase("udev")) ) {
+                if (!(f.getDevName().equalsIgnoreCase("tmpfs") || f.getDevName().equalsIgnoreCase("udev"))) {
                     DiskLevelMetrics diskLevelMetrics = new DiskLevelMetrics();
-                    List<DiskLevelMetrics>test=new ArrayList<>();
+                    List<DiskLevelMetrics> test = new ArrayList<>();
                     diskLevelMetrics.setDiskName(f.getDevName());
                     diskLevelMetrics.setNoOfReads(p.getDiskReads());
                     diskLevelMetrics.setDiskReadBytes(Math.round(p.getDiskReadBytes()));
                     diskLevelMetrics.setNoOfWrites(p.getDiskWrites());
                     diskLevelMetrics.setDiskWriteBytes(p.getDiskWriteBytes());
-                    diskLevelMetrics.setTotalSpace( (p.getTotal())/(1024*1024));
-                    diskLevelMetrics.setUsedSpace((p.getUsed())/(1024*1024));
-                    diskLevelMetrics.setFreeSpace( (p.getFree())/(1024*1024));
+                    diskLevelMetrics.setTotalSpace((p.getTotal()) / (1024 * 1024));
+                    diskLevelMetrics.setUsedSpace((p.getUsed()) / (1024 * 1024));
+                    diskLevelMetrics.setFreeSpace((p.getFree()) / (1024 * 1024));
                     diskLevelMetrics.setFileCount(p.getFiles());
-                    diskLevelMetrics.setUsedPercentage(p.getUsePercent()*100);
+                    diskLevelMetrics.setUsedPercentage(p.getUsePercent() * 100);
                     test.add(diskLevelMetrics);
                     diskLevelMetricsMap.add(test);
                 }
-
-
-                // System.out.println("testing"+1024 * p.getFreeFiles());
             }
 
 
@@ -492,7 +491,7 @@ public final class Metrics {
 
         for (int i = 0; i < ifaces.length; i++) {
             NetInterfaceConfig cfg = sigar.getNetInterfaceConfig(ifaces[i]);
-            if ((cfg.getFlags() & 1L) <= 0L || X.isSame(cfg.getAddress(), "0.0.0.0")) {
+            if ((cfg.getFlags() & 1L) <= 0L || IFStats.isSame(cfg.getAddress(), "0.0.0.0")) {
                 continue;
             }
 
@@ -514,25 +513,6 @@ public final class Metrics {
             networkStats.setTxoverruns(String.valueOf(s.getTxOverruns()));
             networkStats.setTxpackets(String.valueOf(s.getTxPackets()));
         }
-
-//        for (Map.Entry<String, String> opo : l1.entrySet()) {
-//            System.out.println(opo.getKey() + " " + opo.getValue());
-//        }
-
         return networkStats;
     }
-
-
-//
-
-//        stats.put("maxMemory", Runtime.getRuntime().maxMemory());
-//        LOGGER.info("max memory " + Runtime.getRuntime().maxMemory());
-//        stats.put("totalMemory", Runtime.getRuntime().totalMemory());
-//        LOGGER.info("total Memory " + Runtime.getRuntime().totalMemory());
-//        stats.put("freeMemory", Runtime.getRuntime().freeMemory());
-//        LOGGER.info("free memory " + Runtime.getRuntime().freeMemory());
-//        stats.put("cpuUsage", Math.min(round(cpuUsage), 100.0));
-//        LOGGER.info("cpu Usage " + cpuUsage);
-
-
 }

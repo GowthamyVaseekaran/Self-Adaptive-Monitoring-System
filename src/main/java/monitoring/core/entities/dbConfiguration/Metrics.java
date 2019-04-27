@@ -1,148 +1,116 @@
 package monitoring.core.entities.dbConfiguration;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+/**
+ * Entity class.
+ */
 @Entity
-//@Table(name = "Metrics",uniqueConstraints = {@UniqueConstraint(columnNames = {"cpu","memory","cpu_idle","cpu_nice","cpu_user","cpu_wait","committedVM","free_physical_memory","ram","load_avg","total_swap","free_swap","used_swap","no_of_read","read_byte","no_of_writes","write_bytes","total_disk","used_disk","free_disk","file_count","total_thread_count","daemon_thread_count","peak_thread_count","running_thread_count","rx_bytes","rx_dropped","rx_error","rx_frames","rx_overruns","rx_packet","speed","tx_bytes","tx_carrier","tx_collisions","tx_dropped","tx_errors","tx_overruns","tx_packets","disk_name","network_address","network_name"})})
+
 public class Metrics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @Column (length = 1000)
     private String cpu;
 
-//    @Column(length = 1000)
     private String memory;
 
-//    @Column(length = 1000)
     private String cpu_idle;
 
-//    @Column(length = 1000)
     private String cpu_nice;
 
-//    @Column(length = 1000)
     private String cpu_user;
 
-//    @Column(length = 1000)
     private String cpu_wait;
 
-//    @Column(length = 1000)
     private String committedVM;
 
-//    @Column(length = 1000)
     private String free_physical_memory;
 
-//    @Column(length = 1000)
     private String ram;
 
-//    @Column(length = 1000)
     private String load_avg;
 
-//    @Column(length = 1000)
     private String total_swap;
 
-//    @Column(length = 1000)
     private String free_swap;
 
-//    @Column(length = 1000)
     private String used_swap;
 
-//    @Column(length = 1000)
     private String no_of_read;
 
-//    @Column(length = 1000)
     private String read_byte;
 
-//    @Column(length = 1000)
     private String no_of_writes;
 
-//    @Column(length = 1000)
     private String write_bytes;
 
-//    @Column(length = 1000)
     private String total_disk;
 
-//    @Column(length = 1000)
     private String used_disk;
 
-//    @Column(length = 1000)
     private String free_disk;
 
-//    @Column(length = 1000)
     private String file_count;
 
-//    @Column(length = 1000)
     private String total_thread_count;
 
-//    @Column(length = 1000)
     private String daemon_thread_count;
 
-//    @Column(length = 1000)
     private String peak_thread_count;
 
-//    @Column(length = 1000)
     private String running_thread_count;
 
-//    @Column(length = 1000)
     private String rx_bytes;
 
-//    @Column(length = 1000)
     private String rx_dropped;
 
-//    @Column(length = 1000)
     private String rx_error;
 
-//    @Column(length = 1000)
     private String rx_frames;
 
-//    @Column(length = 1000)
     private String rx_overruns;
 
-//    @Column(length = 1000)
     private String rx_packet;
 
-//    @Column(length = 1000)
     private String speed;
 
-//    @Column(length = 1000)
     private String tx_bytes;
 
-//    @Column(length = 1000)
     private String tx_carrier;
 
-//    @Column(length = 1000)
     private String tx_collisions;
 
-//    @Column(length = 1000)
     private String tx_dropped;
 
-//    @Column(length = 1000)
     private String tx_errors;
 
-//    @Column(length = 1000)
     private String tx_overruns;
 
-//    @Column(length = 1000)
     private String tx_packets;
 
-//    @Column(length = 1000)
     private String disk_name;
 
-//    @Column(length = 1000)
     private String network_address;
 
-//    @Column(length = 1000)
     private String network_name;
-
-
-    //Constructor
-
 
     public Metrics() {
     }
 
-    public Metrics(String cpu, String memory, String cpu_idle, String cpu_nice, String cpu_user, String cpu_wait, String committedVM, String free_physical_memory, String ram, String load_avg, String total_swap, String free_swap, String used_swap, String no_of_read, String read_byte, String no_of_writes, String write_bytes, String total_disk, String used_disk, String free_disk, String file_count, String total_thread_count, String daemon_thread_count, String peak_thread_count, String running_thread_count, String rx_bytes, String rx_dropped, String rx_error, String rx_frames, String rx_overruns, String rx_packet, String speed, String tx_bytes, String tx_carrier, String tx_collisions, String tx_dropped, String tx_errors, String tx_overruns, String tx_packets, String disk_name, String network_address, String network_name) {
+    public Metrics(String cpu, String memory, String cpu_idle, String cpu_nice, String cpu_user,
+                   String cpu_wait, String committedVM, String free_physical_memory, String ram, String load_avg,
+                   String total_swap, String free_swap, String used_swap, String no_of_read, String read_byte,
+                   String no_of_writes, String write_bytes, String total_disk, String used_disk, String free_disk,
+                   String file_count, String total_thread_count, String daemon_thread_count, String peak_thread_count,
+                   String running_thread_count, String rx_bytes, String rx_dropped, String rx_error, String rx_frames,
+                   String rx_overruns, String rx_packet, String speed, String tx_bytes, String tx_carrier,
+                   String tx_collisions, String tx_dropped, String tx_errors, String tx_overruns, String tx_packets,
+                   String disk_name, String network_address, String network_name) {
         this.cpu = cpu;
         this.memory = memory;
         this.cpu_idle = cpu_idle;
@@ -186,9 +154,6 @@ public class Metrics {
         this.network_address = network_address;
         this.network_name = network_name;
     }
-
-    //Getter and Setters
-
 
     public String getCpu() {
         return cpu;
@@ -573,6 +538,4 @@ public class Metrics {
                 ", network_name='" + network_name + '\'' +
                 '}';
     }
-
-
 }

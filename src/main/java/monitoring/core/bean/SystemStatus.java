@@ -3,7 +3,6 @@ package monitoring.core.bean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Bean class for system status.
@@ -13,7 +12,7 @@ public class SystemStatus {
     private String currentTime;
     private String systemStatus;
     private HealthDeterminer healthDeterminer;
-    private  List<List<DiskLevelMetrics >> diskLevelMetrics;
+    private  List<List<DiskLevelMetrics>> diskLevelMetrics;
     private ThreadLevelMetrics threadLevelMetrics;
     private SystemLevelMetrics systemLevelMetrics;
     private NetworkStats networkStats;
@@ -60,18 +59,18 @@ public class SystemStatus {
 
 
     private double cpuUsage;
-    private double loadAverage =0;
-    private double cpuIdle =0;
-    private double cpuNice =0;
-    private double cpuUser =0;
-    private double cpuWait =0;
-    private double totalPhysicalMemory =0;
-    private double committedVirtualMemory =0;
-    private double freePhycialMemory =0;
-    private double ramUsage =0;
-    private double totalSwapSize =0;
-    private double freeSwapSize =0;
-    private double usedSwapPercentage =0;
+    private double loadAverage = 0;
+    private double cpuIdle = 0;
+    private double cpuNice = 0;
+    private double cpuUser = 0;
+    private double cpuWait = 0;
+    private double totalPhysicalMemory = 0;
+    private double committedVirtualMemory = 0;
+    private double freePhycialMemory = 0;
+    private double ramUsage = 0;
+    private double totalSwapSize = 0;
+    private double freeSwapSize = 0;
+    private double usedSwapPercentage = 0;
 
     private double heapInitUsage;
     private double heapCommitted;
@@ -438,11 +437,11 @@ public class SystemStatus {
         this.healthDeterminer = healthDeterminer;
     }
 
-    public List<List<DiskLevelMetrics >> getDiskLevelMetrics() {
+    public List<List<DiskLevelMetrics>> getDiskLevelMetrics() {
         return diskLevelMetrics;
     }
 
-    public void setDiskLevelMetrics(List<List<DiskLevelMetrics >> diskLevelMetrics) {
+    public void setDiskLevelMetrics(List<List<DiskLevelMetrics>> diskLevelMetrics) {
         this.diskLevelMetrics = diskLevelMetrics;
     }
 

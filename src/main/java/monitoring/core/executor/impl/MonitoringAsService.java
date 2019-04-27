@@ -11,6 +11,8 @@ import javax.management.ReflectionException;
  * Implementation for monitoring service.
  */
 public interface MonitoringAsService {
-   String getTrainedBestMatchNeuron() throws IOException, ClassNotFoundException, InterruptedException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException, SigarException, InstantiationException, IllegalAccessException;
+   String getTrainedBestMatchNeuron() throws IOException, ClassNotFoundException, InterruptedException,
+           MalformedObjectNameException, InstanceNotFoundException, ReflectionException, SigarException,
+           InstantiationException, IllegalAccessException;
    String getSystemDetails();
 }

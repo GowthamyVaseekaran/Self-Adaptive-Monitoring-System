@@ -1,5 +1,8 @@
 package monitoring.core.bean;
 
+/**
+ * Network stats bean class.
+ */
 public class NetworkStats {
     private String address;
     private String name;

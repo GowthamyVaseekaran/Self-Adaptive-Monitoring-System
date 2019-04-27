@@ -1,83 +1,72 @@
 package monitoring.core.executor.impl;
 
-import monitoring.core.executor.impl.utils.Constants;
 import monitoring.core.bean.DiskLevelMetrics;
 import monitoring.core.bean.SystemStatus;
+import monitoring.core.executor.impl.utils.Constants;
 import monitoring.core.monitor.Metrics;
 import org.hyperic.sigar.SigarException;
 import org.springframework.stereotype.Component;
 
-import javax.management.InstanceNotFoundException;
-import javax.management.MalformedObjectNameException;
-import javax.management.ReflectionException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.InstanceNotFoundException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ReflectionException;
 
+/**
+ * Metrics changer class.
+ */
 @Component
-
 public class MetricsChanger {
 
-    public void changeMetrics(String metrics, SystemStatus systemStatus, Metrics metricsAgent) throws MalformedObjectNameException, ReflectionException, SigarException, InstanceNotFoundException {
+    public void changeMetrics(String metrics, SystemStatus systemStatus, Metrics metricsAgent)
+            throws MalformedObjectNameException, ReflectionException, SigarException, InstanceNotFoundException {
         switch (metrics) {
             case Constants.CPU_IDLE:
                 double cpuIdle = metricsAgent.getCPUIdle();
                 systemStatus.setCpuIdle(cpuIdle);
-                // systemStatus.getSystemLevelMetrics().setCpuIdle(metricsAgent.getSystemLevelMetrics().getCpuIdle());
                 break;
             case Constants.CPU_NICE:
                 double cpuNice = metricsAgent.getCPUNice();
                 systemStatus.setCpuNice(cpuNice);
-                // systemStatus.getSystemLevelMetrics().setCpuNice(metricsAgent.getSystemLevelMetrics().getCpuNice());
                 break;
             case Constants.CPU_USER:
                 double cpuUser = metricsAgent.getCPUUser();
                 systemStatus.setCpuUser(cpuUser);
-                // systemStatus.getSystemLevelMetrics().setCpuUser(metricsAgent.getSystemLevelMetrics().getCpuUser());
                 break;
             case Constants.CPU_WAIT:
                 double cpuWait = metricsAgent.getCPUWait();
                 systemStatus.setCpuWait(cpuWait);
-                // systemStatus.getSystemLevelMetrics().setCpuWait(metricsAgent.getSystemLevelMetrics().getCpuWait());
                 break;
             case Constants.COMMITTED_VM:
                 double committedVM = metricsAgent.getCommittedVirtualMemorySize();
                 systemStatus.setCommittedVirtualMemory(committedVM);
                 double ramUsage = metricsAgent.getRAMUsage();
                 systemStatus.setRamUsage(ramUsage);
-                //systemStatus.getSystemLevelMetrics().setCommittedVirtualMemory(metricsAgent.getSystemLevelMetrics().getCommittedVirtualMemory());
                 break;
             case Constants.FREE_PHYSICAL_MEMORY:
                 double freePhysicalMemory = metricsAgent.getFreePhysicalMemory();
                 double totalPhysicalMemory = metricsAgent.getTotalPhysicalMemory();
                 systemStatus.setFreePhycialMemory(freePhysicalMemory);
                 systemStatus.setTotalPhysicalMemory(totalPhysicalMemory);
-                //systemStatus.getSystemLevelMetrics().setFreePhycialMemory(metricsAgent.getSystemLevelMetrics().getFreePhycialMemory());
                 break;
             case Constants.RAM_USAGE:
                 ramUsage = metricsAgent.getRAMUsage();
                 systemStatus.setRamUsage(ramUsage);
-                // systemStatus.getSystemLevelMetrics().setRamUsage(metricsAgent.getSystemLevelMetrics().getRamUsage());
                 break;
             case Constants.FREE_SWAP_USAGE:
                 double freeSwapUsage = metricsAgent.getFreeSwapSize();
                 systemStatus.setFreeSwapSize(freeSwapUsage);
                 double totalSwapSize = metricsAgent.getTotalSwapSpaceSize();
                 systemStatus.setTotalSwapSize(totalSwapSize);
-                //  systemStatus.getSystemLevelMetrics().setFreeSwapSize(metricsAgent.getSystemLevelMetrics().getFreeSwapSize());
                 break;
-//            case Constants.LOAD_AVERAGE:
-//                double loadAverage=metricsAgent.getSystemLoadAverage();
-//                systemStatus.setLoadAverage(loadAverage);
-//                //systemStatus.getSystemLevelMetrics().setLoadAverage(metricsAgent.getSystemLevelMetrics().getLoadAverage());
-//                break;
             case Constants.TOTAL_SWAP_SIZE:
                 totalSwapSize = metricsAgent.getTotalSwapSpaceSize();
                 systemStatus.setTotalSwapSize(totalSwapSize);
                 freeSwapUsage = metricsAgent.getFreeSwapSize();
                 systemStatus.setFreeSwapSize(freeSwapUsage);
-                //systemStatus.getSystemLevelMetrics().setTotalSwapSize(metricsAgent.getSystemLevelMetrics().getTotalSwapSize());
                 break;
             case Constants.USED_SWAP_SIZE:
                 double usedSwapSize = metricsAgent.getUsedSwapPercentage();
@@ -86,7 +75,6 @@ public class MetricsChanger {
                 freeSwapUsage = metricsAgent.getFreeSwapSize();
                 systemStatus.setFreeSwapSize(freeSwapUsage);
                 systemStatus.setUsedSwapPercentage(usedSwapSize);
-                // systemStatus.getSystemLevelMetrics().setUsedSwapPercentage(metricsAgent.getSystemLevelMetrics().getUsedSwapPercentage());
                 break;
             case Constants.NO_OF_READS:
             case Constants.READ_BYTES:
@@ -115,22 +103,6 @@ public class MetricsChanger {
                     }
                 }
                 break;
-//            case Constants.TOTAL_DISK_SPACE:
-//            case Constants.USED_DISK_SPACE:
-//            case Constants.FREE_DISK_SPACE:
-//                for (List<DiskLevelMetrics> diskLevel: metricsAgent.getDiskIO()) {
-//                    for (DiskLevelMetrics diskLevelMetrics:diskLevel) {
-//                        String diskName = diskLevelMetrics.getDiskName();
-//                        double totalDiskSpace = diskLevelMetrics.getTotalSpace();
-//                        double usedDiskSpace = diskLevelMetrics.getUsedSpace();
-//                        double freeDiskSpace = diskLevelMetrics.getFreeSpace();
-//                        systemStatus.setDiskName(diskName);
-//                        systemStatus.setTotalSpace(totalDiskSpace);
-//                        systemStatus.setUsedSpace(usedDiskSpace);
-//                        systemStatus.setFreeSpace(freeDiskSpace);
-//                    }
-//                }
-//                break;
             case Constants.FILE_COUNT:
                 for (List<DiskLevelMetrics> diskLevel: metricsAgent.getDiskIO()) {
                     for (DiskLevelMetrics diskLevelMetrics:diskLevel) {
@@ -143,22 +115,18 @@ public class MetricsChanger {
             case Constants.TOTAL_THREAD_COUNT:
                 long threadCount = metricsAgent.getTotalStartedThreadCount();
                 systemStatus.setTotalThreadCount(threadCount);
-                //systemStatus.getThreadLevelMetrics().setTotalThreadCount(threadCount);
                 break;
             case Constants.DAEMON_THREAD_COUNT:
                 int daemonThreadCount = metricsAgent.getDaemonThreadCount();
                 systemStatus.setDaemonThreadCount(daemonThreadCount);
-                //systemStatus.getThreadLevelMetrics().setDaemonThreadCount(metricsAgent.getThreadLevelMetrics().getDaemonThreadCount());
                 break;
             case Constants.PEAK_THREAD_COUNT:
                 int peakThreadCount = metricsAgent.getPeakThreadCount();
                 systemStatus.setPeakThreadCount(peakThreadCount);
-                //systemStatus.getThreadLevelMetrics().setPeakThreadCount(metricsAgent.getThreadLevelMetrics().getPeakThreadCount());
                 break;
             case Constants.RUNNING_THREAD_COUNT:
                 int runningThreadCount = metricsAgent.getRunningThreadCount();
                 systemStatus.setRunningThreadCount(runningThreadCount);
-                // systemStatus.getThreadLevelMetrics().setRunningThreadCount(metricsAgent.getThreadLevelMetrics().getRunningThreadCount());
                 break;
             case Constants.RX_BYTES:
             case Constants.RX_DROPPED:
@@ -168,7 +136,6 @@ public class MetricsChanger {
             case Constants.RX_PACKETS:
                 String networkAddress = metricsAgent.getIfstats().getAddress();
                 String name = metricsAgent.getIfstats().getName();
-                //String rxBytes = metricsAgent.getIfstats().getRxbytes();
                 String rxDropped = metricsAgent.getIfstats().getRxdropped();
                 String rxError = metricsAgent.getIfstats().getRxerrors();
                 String rxFrame = metricsAgent.getIfstats().getRxFrame();
@@ -176,7 +143,6 @@ public class MetricsChanger {
                 String rxPackets = metricsAgent.getIfstats().getRxpackets();
                 systemStatus.setAddress(networkAddress);
                 systemStatus.setName(name);
-                // systemStatus.setRxbytes(rxBytes);
                 systemStatus.setRxdropped(rxDropped);
                 systemStatus.setRxerrors(rxError);
                 systemStatus.setRxFrame(rxFrame);
@@ -200,7 +166,6 @@ public class MetricsChanger {
             case Constants.TX_PACKETS:
                 networkAddress = metricsAgent.getIfstats().getAddress();
                 name = metricsAgent.getIfstats().getName();
-                //String txBytes = metricsAgent.getIfstats().getTxbytes();
                 String txCarrier = metricsAgent.getIfstats().getTxcarrier();
                 String txCollision = metricsAgent.getIfstats().getTxcollisions();
                 String txDropped = metricsAgent.getIfstats().getTxdropped();
@@ -209,7 +174,6 @@ public class MetricsChanger {
                 String txPackets = metricsAgent.getIfstats().getTxpackets();
                 systemStatus.setAddress(networkAddress);
                 systemStatus.setName(name);
-                //systemStatus.setTxbytes(txBytes);
                 systemStatus.setTxcarrier(txCarrier);
                 systemStatus.setTxcollisions(txCollision);
                 systemStatus.setTxdropped(txDropped);
@@ -282,17 +246,16 @@ public class MetricsChanger {
         systemStatus.setHeapCommitted(0);
         systemStatus.setHeapUsed(0);
         systemStatus.setHeapMax(0);
-
         systemStatus.setNonHeapInitUsage(0);
         systemStatus.setNonHeapCommitted(0);
         systemStatus.setNonHeapUsed(0);
         systemStatus.setNonHeapMax(0);
-
         systemStatus.setCurrentlyLoadedClass(0);
         systemStatus.setTotalLoadedClass(0);
     }
 
-    public void collectAllMetrics(SystemStatus systemStatus,Metrics metricsAgent) throws SigarException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException {
+    public void collectAllMetrics(SystemStatus systemStatus, Metrics metricsAgent)
+            throws SigarException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException {
         double cpuIdle = metricsAgent.getCPUIdle();
         systemStatus.setCpuIdle(cpuIdle);
 
@@ -301,16 +264,10 @@ public class MetricsChanger {
 
         double cpuUser = metricsAgent.getCPUUser();
         systemStatus.setCpuUser(cpuUser);
-        // systemStatus.getSystemLevelMetrics().setCpuUser(metricsAgent.getSystemLevelMetrics().getCpuUser());
-
         double cpuWait = metricsAgent.getCPUWait();
         systemStatus.setCpuWait(cpuWait);
-        // systemStatus.getSystemLevelMetrics().setCpuWait(metricsAgent.getSystemLevelMetrics().getCpuWait());
-
         double committedVM = metricsAgent.getCommittedVirtualMemorySize();
         systemStatus.setCommittedVirtualMemory(committedVM);
-        //systemStatus.getSystemLevelMetrics().setCommittedVirtualMemory(metricsAgent.getSystemLevelMetrics().getCommittedVirtualMemory());
-
         double freePhysicalMemory = metricsAgent.getFreePhysicalMemory();
         double totalPhysicalMemory = metricsAgent.getTotalPhysicalMemory();
         systemStatus.setFreePhycialMemory(freePhysicalMemory);
@@ -318,13 +275,11 @@ public class MetricsChanger {
 
         double ramUsage = metricsAgent.getRAMUsage();
         systemStatus.setRamUsage(ramUsage);
-        // systemStatus.getSystemLevelMetrics().setRamUsage(metricsAgent.getSystemLevelMetrics().getRamUsage());
 
         double freeSwapUsage = metricsAgent.getFreeSwapSize();
         systemStatus.setFreeSwapSize(freeSwapUsage);
-        //  systemStatus.getSystemLevelMetrics().setFreeSwapSize(metricsAgent.getSystemLevelMetrics().getFreeSwapSize());
 
-        double loadAverage=metricsAgent.getSystemLoadAverage();
+        double loadAverage = metricsAgent.getSystemLoadAverage();
         systemStatus.setLoadAverage(loadAverage);
 
         double totalSwapSize = metricsAgent.getTotalSwapSpaceSize();
@@ -427,38 +382,34 @@ public class MetricsChanger {
 
     }
 
-    public void memoryMetricsSelection(Metrics metricsAgent,SystemStatus systemStatus, Map<String, Map<String, Double>> co_efficentCalculator) throws MalformedObjectNameException, ReflectionException, SigarException, InstanceNotFoundException {
+    public void memoryMetricsSelection(Metrics metricsAgent,
+                                       SystemStatus systemStatus, Map<String, Map<String, Double>> coEfficentCalculator)
+            throws MalformedObjectNameException, ReflectionException, SigarException, InstanceNotFoundException {
 
-        for (Map.Entry<String, Map<String, Double>> err : co_efficentCalculator.entrySet()) {
+        for (Map.Entry<String, Map<String, Double>> err : coEfficentCalculator.entrySet()) {
             for (Map.Entry<String, Double> rer : err.getValue().entrySet()) {
-                if(err.getKey().equalsIgnoreCase(Constants.MEMORY_USAGE) ) {
-                    // TODO: 3/13/19 comment it
-                    changeMetrics(rer.getKey(),systemStatus,metricsAgent);
-
-                    //System.out.println(err.getKey() + " " + rer.getKey() + " -> " + rer.getValue());
+                if (err.getKey().equalsIgnoreCase(Constants.MEMORY_USAGE)) {
+                    changeMetrics(rer.getKey(), systemStatus, metricsAgent);
                 }
             }
         }
     }
 
-    public void cpuMetricsSelection(Metrics metricsAgent,SystemStatus systemStatus,  Map<String, Map<String, Double>> co_efficentCalculator) throws MalformedObjectNameException, ReflectionException, SigarException, InstanceNotFoundException {
-
-
-        for (Map.Entry<String, Map<String, Double>> err : co_efficentCalculator.entrySet()) {
+    public void cpuMetricsSelection(Metrics metricsAgent, SystemStatus systemStatus,
+                                    Map<String, Map<String, Double>> coEfficentCalculator)
+            throws MalformedObjectNameException, ReflectionException, SigarException, InstanceNotFoundException {
+        for (Map.Entry<String, Map<String, Double>> err : coEfficentCalculator.entrySet()) {
             for (Map.Entry<String, Double> rer : err.getValue().entrySet()) {
-                if(err.getKey().equalsIgnoreCase(Constants.CPU_USAGE) ) {
-                    // TODO: 3/13/19 Comment it
-                    changeMetrics(rer.getKey(),systemStatus,metricsAgent);
-
-
-                    //System.out.println(err.getKey() + " " + rer.getKey() + " -> " + rer.getValue());
+                if (err.getKey().equalsIgnoreCase(Constants.CPU_USAGE)) {
+                    changeMetrics(rer.getKey(), systemStatus, metricsAgent);
                 }
             }
         }
     }
 
-    public Map<String, SystemStatus> collectHighLevelMetrics(Metrics metricsAgent, SystemStatus systemStatus) throws SigarException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException {
-        Map<String, SystemStatus> system=new HashMap<>();
+    public Map<String, SystemStatus> collectHighLevelMetrics(Metrics metricsAgent, SystemStatus systemStatus)
+            throws SigarException, MalformedObjectNameException, InstanceNotFoundException, ReflectionException {
+        Map<String, SystemStatus> system = new HashMap<>();
         for (List<DiskLevelMetrics> diskLevel: metricsAgent.getDiskIO()) {
             for (DiskLevelMetrics diskLevelMetrics:diskLevel) {
                 String diskName = diskLevelMetrics.getDiskName();
@@ -469,12 +420,12 @@ public class MetricsChanger {
                 systemStatus.setTotalSpace(totalDiskSpace);
                 systemStatus.setUsedSpace(usedDiskSpace);
                 systemStatus.setFreeSpace(freeDiskSpace);
-                system.put(systemStatus.getDiskName(),systemStatus);
+                system.put(systemStatus.getDiskName(), systemStatus);
             }
 
         }
 
-        double loadAverage=metricsAgent.getSystemLoadAverage();
+        double loadAverage = metricsAgent.getSystemLoadAverage();
         systemStatus.setLoadAverage(loadAverage);
 
         String networkAddress = metricsAgent.getIfstats().getAddress();

@@ -12,8 +12,6 @@ import javax.swing.WindowConstants;
  */
 public class Visualizer extends JFrame {
     private static final long SERIALVERSIONUID = 0L;
-    // TODO: 3/30/19 Changed to private
-
     private static final int FRAME_WIDTH = 900;
     private static final int FRAME_HEIGHT = 900;
 
@@ -55,16 +53,6 @@ public class Visualizer extends JFrame {
             }
 
         }
-        // }
-//        for (int i = 0; i < noOfNeuronCount; i++) {
-//            points[i][0] = som.getWeight(i, 0);
-//            points[i][1] = som.getWeight(i, 1);
-//            xmin = Math.min(xmin, points[i][0]);
-//            ymin = Math.min(ymin, points[i][1]);
-//            xmax = Math.max(xmax, points[i][0]);
-//            ymax = Math.max(ymax, points[i][1]);
-//        }
-
         // compute the scaling factor
         double dx = getWidth() / (xmax - xmin);
         double dy = getHeight() / (ymax - ymin);
@@ -78,6 +66,4 @@ public class Visualizer extends JFrame {
 
         getBufferStrategy().show();
     }
-
-
 }

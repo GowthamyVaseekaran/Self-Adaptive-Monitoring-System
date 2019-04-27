@@ -51,14 +51,14 @@ public class FileParser {
 
         // while there are more entries in the logs
         while (i < length && cpuScanner.hasNextLine() && memScanner.hasNextLine()) {
-           // int j=0;
-           // while(j<6 && cpuScanner.hasNextLine()) {
-                line = cpuScanner.nextLine();
+            // int j=0;
+            // while(j<6 && cpuScanner.hasNextLine()) {
+            line = cpuScanner.nextLine();
             //    j++;
-          //  }
+            //  }
             String[] strings = line.split(",");
             ArrayList<String> data = new ArrayList<String>();
-            for (String s: strings) {
+            for (String s : strings) {
                 if (s != null && s.length() > 0) {
                     data.add(s);
                 }
@@ -68,14 +68,14 @@ public class FileParser {
             // read CPU metric change to 6 *100
             metrics[0] = (Math.round((Double.parseDouble(data.get(6)) * 100)));
 
-           // j=0;
-           // while(j<2 && memScanner.hasNextLine()) {
-                line = memScanner.nextLine();
-           //     j++;
-           // }
+            // j=0;
+            // while(j<2 && memScanner.hasNextLine()) {
+            line = memScanner.nextLine();
+            //     j++;
+            // }
             strings = line.split(",");
             data = new ArrayList<String>();
-            for (String s: strings) {
+            for (String s : strings) {
                 if (s != null && s.length() > 0) {
                     data.add(s);
                 }
@@ -96,8 +96,7 @@ public class FileParser {
         return vectors;
     }
 
-    private MetricInfoDao transform(Metrics metircsInfoEntity)
-    {
+    private MetricInfoDao transform(Metrics metircsInfoEntity) {
         MetricInfoDao metricInfoDao = new MetricInfoDao();
         metricInfoDao.setCpu(metircsInfoEntity.getCpu());
         metricInfoDao.setMemory(metircsInfoEntity.getMemory());
@@ -107,15 +106,14 @@ public class FileParser {
     public List<MetricInfoDao> findAllCpuInfo() {
         List<MetricInfoDao> returnList = new ArrayList<>();
         List<Metrics> allCpuInfo = testRepository.findAll();
-        for (Metrics cpu : allCpuInfo)
-        {
+        for (Metrics cpu : allCpuInfo) {
             returnList.add(transform(cpu));
 
         }
 
-        for (MetricInfoDao test: returnList) {
-            logger.info("cpu"+test.getCpu());
-            logger.info("memory"+test.getMemory());
+        for (MetricInfoDao test : returnList) {
+            logger.info("cpu" + test.getCpu());
+            logger.info("memory" + test.getMemory());
         }
         return returnList;
     }
@@ -127,76 +125,8 @@ public class FileParser {
         int i = 0;
 
 
-//        List<MetricInfoDao> returnList = new ArrayList<>();
-//        List<Metrics> allCpuInfo = testRepository.findAll();
-//        for (Metrics cpu : allCpuInfo)
-//        {
-//            returnList.add(transform(cpu));
-//
-//        }
         findAllCpuInfo();
 
-//        for (MetricInfoDao test: findAllCpuInfo()) {
-//            double[] monitor = new double[2];
-//            // read CPU metric change to 6 *100
-//            monitor[0] = (Math.round((Double.parseDouble(test.getCpu()))));
-//            double totMem = (Double.parseDouble(test.getMemory()));
-//
-//            // normalize mem metric
-//            monitor[1] = Math.round(totMem);
-//
-//           // logger.info("cpu"+test.getCpu());
-//           // logger.info("memory"+test.getMemory());
-//            vectors.add(new WeightVector(monitor));
-//        }
         return vectors;
-
-
-
-//        // while there are more entries in the logs
-//        while (i < length && cpuScanner.hasNextLine() && memScanner.hasNextLine()) {
-//            // int j=0;
-//            // while(j<6 && cpuScanner.hasNextLine()) {
-//            line = cpuScanner.nextLine();
-//            //    j++;
-//            //  }
-//            String[] strings = line.split(",");
-//            ArrayList<String> data = new ArrayList<String>();
-//            for (String s: strings) {
-//                if (s != null && s.length() > 0) {
-//                    data.add(s);
-//                }
-//            }
-//
-//            double[] monitor = new double[2];
-//            // read CPU metric change to 6 *100
-//            monitor[0] = (Math.round((Double.parseDouble(data.get(6)) * 100)));
-//
-//            // j=0;
-//            // while(j<2 && memScanner.hasNextLine()) {
-//            line = memScanner.nextLine();
-//            //     j++;
-//            // }
-//            strings = line.split(",");
-//            data = new ArrayList<String>();
-//            for (String s: strings) {
-//                if (s != null && s.length() > 0) {
-//                    data.add(s);
-//                }
-//            }
-//            //*100
-//            double totMem = (Double.parseDouble(data.get(1)) * 100);
-//
-//            // normalize mem metric
-//            monitor[1] = Math.round(totMem);
-////            j=0;
-////            while(j<2 && memScanner.hasNextLine()) {
-////                line = memScanner.nextLine();
-////                j++;
-////            }
-//            vectors.add(new WeightVector(monitor));
-//            i++;
-//        }
-//        return vectors;
     }
 }
